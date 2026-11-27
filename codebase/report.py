@@ -18,6 +18,13 @@ def _tx_index(transactions):
     return {row["tx_id"]: row for row in transactions}
 
 
+def _tx_data(row):
+    """Một giao dịch ở dạng frontend hiển thị được; số giữ nguyên số nguyên đồng."""
+    return {"tx_id": row["tx_id"], "date": row["date"], "description": row["description"] or "",
+            "amount": row["amount"], "fee": row["fee"], "source": row["source"],
+            "category": row.get("category")}
+
+
 def summary_context(from_date, to_date, summary, transactions, category=None, duplicates=None):
     index = _tx_index(transactions)
     groups = summary["nhom"]
@@ -32,7 +39,10 @@ def summary_context(from_date, to_date, summary, transactions, category=None, du
              "Tổng chi: **%s**" % money(summary["tong_chi"]), "",
              "| Nhóm | Số tiền | Tỷ lệ |", "|---|---:|---:|"]
     evidence_ids = []
+    group_data = []
     for row in groups:
+        group_data.append({"nhom": row["nhom"], "tong_tien": row["tong_tien"], "phan_tram": row["phan_tram"],
+                           "so_giao_dich": len(row["tx_ids"])})
         allowed_money.add(row["tong_tien"])
         allowed_percent.add(row["phan_tram"])
         facts.append("%s: %s, %s." % (row["nhom"], money(row["tong_tien"]), percent(row["phan_tram"])))
@@ -77,8 +87,54 @@ def summary_context(from_date, to_date, summary, transactions, category=None, du
             allowed_money.add(group["so_tien"])
             lines.append("- %s · %s · %s · %s" %
                          (", ".join(group["tx_ids"]), display_date(group["ngay"]), group["mo_ta"], money(group["so_tien"])))
-    return {"facts": "\n".join(facts), "report": "\n".join(lines),
+    evidence = [_tx_data(index[tx_id]) for tx_id in evidence_ids[:50]]
+    data = {
+        "kind": "mot_nhom" if category else "tong_hop",
+        "period": {"from": from_date, "to": to_date},
+        "total": summary["tong_chi"], "count": summary["so_giao_dich"], "category": category,
+        "groups": [{"nhom": row["nhom"], "tong_tien": row["tong_tien"], "phan_tram": row["phan_tram"],
+                    "so_giao_dich": len(row["tx_ids"])} for row in groups],
+        "unknown": {"tong_tien": summary["khong_ro"]["tong_tien"],
+                    "items": [_tx_data(index[tx_id]) for tx_id in unknown_ids]},
+        "largest": None if category or not evidence else max(evidence, key=lambda row: row["amount"]),
+        "evidence": evidence,
+        "excluded": dict(summary["khong_tinh"]),
+        "duplicates": duplicates or [],
+    }
+    return {"facts": "\n".join(facts), "report": "\n".join(lines), "data": data,
             "allowed_money": allowed_money, "allowed_percent": allowed_percent}
+
+
+def search_context(from_date, to_date, label, rows, total_spending):
+    """Các khoản chi khớp diễn giải: tổng, số khoản, gộp theo diễn giải, danh sách đầy đủ — đều do code tính."""
+    rows = sorted(rows, key=lambda row: (row["date"], row["time"], row["tx_id"]))
+    total = sum(row["amount"] for row in rows)
+    share = round(total * 100.0 / total_spending, 1) if total_spending else 0.0
+    by_text = {}
+    for row in rows:
+        key = row["description"] or "(trống)"
+        entry = by_text.setdefault(key, {"description": key, "tong_tien": 0, "so_giao_dich": 0})
+        entry["tong_tien"] += row["amount"]
+        entry["so_giao_dich"] += 1
+    merchants = sorted(by_text.values(), key=lambda entry: (-entry["tong_tien"], entry["description"]))
+    period = "%s–%s" % (display_date(from_date), display_date(to_date))
+    allowed_money = {total, total_spending} | {row["amount"] for row in rows} | {m["tong_tien"] for m in merchants}
+    facts = ["Khoảng %s. %s: %s, %d giao dịch, %s tổng chi %s." %
+             (period, label, money(total), len(rows), percent(share), money(total_spending))]
+    lines = ["### %s" % label, "", "Khoảng dữ liệu: **%s**" % period,
+             "Tổng: **%s** · %d giao dịch · %s tổng chi" % (money(total), len(rows), percent(share)), ""]
+    if not rows:
+        lines.append("Không có giao dịch chi nào có diễn giải khớp trong khoảng này.")
+    else:
+        lines.extend(["| Mã | Ngày | Diễn giải | Số tiền |", "|---|---|---|---:|"])
+        for row in rows:
+            lines.append("| %s | %s | %s | %s |" % (row["tx_id"], display_date(row["date"]),
+                                                    row["description"] or "(trống)", money(row["amount"])))
+    data = {"kind": "tim_kiem", "period": {"from": from_date, "to": to_date}, "label": label,
+            "total": total, "count": len(rows), "share": share, "total_spending": total_spending,
+            "merchants": merchants, "items": [_tx_data(row) for row in rows]}
+    return {"facts": "\n".join(facts), "report": "\n".join(lines), "data": data,
+            "allowed_money": allowed_money, "allowed_percent": {share}}
 
 
 def duplicates_context(from_date, to_date, summary, duplicates):
@@ -97,7 +153,9 @@ def duplicates_context(from_date, to_date, summary, duplicates):
                       "  - Ngày: %s" % display_date(group["ngay"]), "  - Mô tả: %s" % group["mo_ta"],
                       "  - Mỗi khoản: %s" % money(group["so_tien"])])
     lines.extend(["", "Tổng chi vẫn là **%s**." % money(summary["tong_chi"])])
-    return {"facts": "\n".join(facts), "report": "\n".join(lines),
+    data = {"kind": "kiem_trung", "period": {"from": from_date, "to": to_date},
+            "total": summary["tong_chi"], "duplicates": duplicates}
+    return {"facts": "\n".join(facts), "report": "\n".join(lines), "data": data,
             "allowed_money": allowed_money, "allowed_percent": set()}
 
 
@@ -119,7 +177,11 @@ def comparison_context(result):
              "| Nhóm | %s | %s | Chênh lệch | Tỷ lệ so với tháng đầu |" % (left["month"], right["month"]),
              "|---|---:|---:|---:|---:|"]
     increases = [row for row in result["chenh_lech"] if row["tien"] > 0][:3]
+    increase_data = []
     for row in increases:
+        increase_data.append({"nhom": row["nhom"], "truoc": left_groups.get(row["nhom"], 0),
+                              "sau": right_groups.get(row["nhom"], 0), "tien": row["tien"],
+                              "phan_tram": row["phan_tram"]})
         before, after = left_groups.get(row["nhom"], 0), right_groups.get(row["nhom"], 0)
         allowed_money.update((before, after))
         allowed_money.add(abs(row["tien"]))
@@ -132,5 +194,16 @@ def comparison_context(result):
                      (row["nhom"], money(before), money(after), sign, money(abs(row["tien"])), pct))
         facts.append("%s: %s lên %s, chênh %s%s." %
                      (row["nhom"], money(before), money(after), sign, money(abs(row["tien"]))))
-    return {"facts": "\n".join(facts), "report": "\n".join(lines),
+    decreases = [row for row in result["chenh_lech"] if row["tien"] < 0]
+    drop = min(decreases, key=lambda row: row["tien"]) if decreases else None
+    data = {
+        "kind": "so_sanh", "window": result["cua_so"],
+        "months": [{"month": side["month"], "from": side["from_date"], "to": side["to_date"],
+                    "total": side["tong_chi"]} for side in (left, right)],
+        "delta": total_delta, "increases": increase_data,
+        "biggest_drop": None if not drop else {
+            "nhom": drop["nhom"], "truoc": left_groups.get(drop["nhom"], 0),
+            "sau": right_groups.get(drop["nhom"], 0), "tien": drop["tien"]},
+    }
+    return {"facts": "\n".join(facts), "report": "\n".join(lines), "data": data,
             "allowed_money": allowed_money, "allowed_percent": allowed_percent}

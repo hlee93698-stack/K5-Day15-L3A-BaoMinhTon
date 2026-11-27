@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiền đi đâu? — Hỏi đáp chi tiêu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5F7;--card:#FFFFFF;--line:#E3E6EB;--line-soft:#EEF1F5;--ink:#111827;--ink-2:#1F2937;--ink-3:#374151;--muted:#5B6472;
+  --blue:#1F4FD1;--blue-ink:#163BA0;--blue-soft:#E8EEFC;--blue-2:#5B7FE0;--blue-3:#9DB3EE;--blue-pale:#B9C7F0;
+  --ok:#1E6B3A;--ok-soft:#E7F5EC;--warn:#7A3B00;--warn-soft:#FFF4E5;--warn-line:#F1D3A8;--warn-row:#F4E6D2;
+  --bad:#8A1C1C;--bad-soft:#FDECEC;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:15px}
+button,select,input{font:inherit}
+a{color:var(--blue)}a:hover{color:var(--blue-ink)}
+.mono{font-family:var(--mono);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.app{min-height:100vh;display:flex;flex-wrap:wrap;align-items:stretch}
+aside{flex:1 1 260px;max-width:300px;padding:28px 22px;background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:28px}
+@media (min-width:861px){aside{position:sticky;top:0;height:100vh;overflow-y:auto}}
+@media (max-width:860px){aside{max-width:none;border-right:none;border-bottom:1px solid var(--line);gap:18px}}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{width:36px;height:36px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center}
+.brand b{font-size:17px;display:block}.brand small{font-size:12px;color:var(--muted)}
+.btn-new{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:10px;border:none;background:var(--ink);color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+.eyebrow{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+nav{display:flex;flex-direction:column;gap:4px}
+nav .eyebrow{margin-bottom:6px}
+nav button{text-align:left;padding:10px 12px;border-radius:8px;border:none;background:none;color:var(--ink);font-size:14px;cursor:pointer}
+nav button:hover{background:var(--blue-soft);color:var(--blue-ink)}
+.range{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;background:var(--bg)}
+.range strong{font-size:15px}.range div{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-3)}
+.who{margin-top:auto;display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:16px;background:var(--blue-soft);color:var(--blue-ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.who b{font-size:14px;display:block}.who small{font-size:12px;color:var(--muted)}
+
+main{flex:999 1 560px;min-width:0;padding:28px clamp(16px,4vw,56px) 0;display:flex;flex-direction:column;gap:24px}
+.wrap{max-width:980px;width:100%;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+header.top h1{margin:0;font-size:22px}
+.pill{padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px}
+#thread{display:flex;flex-direction:column;gap:28px;flex:1 1 auto}
+.empty{padding:48px 24px;border:1px dashed #C9CED6;border-radius:16px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:14px;align-items:center}
+.empty h2{margin:0;color:var(--ink);font-size:18px}
+
+.q{align-self:flex-end;max-width:70%;padding:12px 16px;border-radius:16px 16px 4px 16px;background:var(--blue);color:#fff;white-space:pre-wrap;word-break:break-word}
+article{display:flex;flex-direction:column;gap:16px}
+.kind{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.tag{padding:4px 10px;border-radius:6px;background:var(--blue-soft);color:var(--blue-ink);font-weight:600}
+.tag.grey{background:#EEF1F5;color:var(--ink-3)}.tag.red{background:var(--bad-soft);color:var(--bad)}.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px}
+.card.tight{padding:20px 24px;gap:14px}
+.card h2{margin:0;font-size:16px}
+.bubble{max-width:90%;padding:14px 16px;border-radius:14px 14px 14px 4px;background:var(--card);border:1px solid var(--line);line-height:1.55}
+.bubble.err{background:var(--bad-soft);border-color:#F3C1C1;color:var(--bad)}
+.total{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.total .big{font-size:40px;font-weight:700;letter-spacing:-.02em;display:block}
+.ok{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--ok-soft);color:var(--ok);font-size:13px;font-weight:600}
+.bars{display:grid;grid-template-columns:minmax(96px,140px) minmax(0,1fr) minmax(120px,auto);gap:10px 16px;align-items:center;font-size:14px}
+.track{height:12px;border-radius:6px;background:var(--line-soft)}.fill{height:12px;border-radius:6px;background:var(--blue)}
+.right{text-align:right}
+.narr{margin:0;padding-top:16px;border-top:1px solid var(--line-soft);line-height:1.65;color:var(--ink-2);white-space:pre-wrap}
+.strip{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--bg)}
+.strip .eyebrow{font-weight:700}
+.strip .grow{font-size:14px;flex:1 1 260px}
+.strip.white{background:var(--card);border:1px solid var(--line)}
+
+.unk{background:var(--card);border:1px solid var(--warn-line);border-radius:16px;overflow:hidden}
+.unk-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:18px 24px;background:var(--warn-soft);color:var(--warn)}
+.unk-head h2{margin:0;font-size:16px}.unk-head small{font-size:13px}
+.unk-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:14px 24px;border-top:1px solid var(--warn-row)}
+.unk-row .id{width:104px;color:var(--muted)}.unk-row .d{width:48px;font-size:13px;color:var(--muted)}
+.unk-row .desc{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.unk-row .desc span:first-child{word-break:break-word}
+.unk-row .amt{width:110px;text-align:right;font-weight:600}
+.unk label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+select{min-height:40px;padding:0 10px;border-radius:8px;border:1px solid #C9CED6;background:#fff;color:var(--ink)}
+.unk-foot{padding:12px 24px;border-top:1px solid var(--warn-row);font-size:12px;color:var(--muted)}
+.changed{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ok)}
+.btn-line{min-height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--ok);background:#fff;color:var(--ok);font-weight:600;cursor:pointer}
+
+details summary{cursor:pointer;font-weight:700;font-size:16px;list-style-position:outside}
+.tbl{overflow-x:auto}
+table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px}
+th{padding:8px 12px;text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+td{padding:10px 12px;border-top:1px solid var(--line-soft)}
+th:first-child,td:first-child{padding-left:0}th:last-child,td:last-child{padding-right:0}
+tr.group td{border-top-color:var(--line)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tile{padding:14px 16px;border-radius:12px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.tile b{font-size:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.stat b{font-size:28px}.stat.dark{background:var(--ink);color:#fff;border-color:var(--ink)}.stat.dark span{color:#C9CED6}
+.info{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;background:var(--blue-soft);color:var(--blue-ink);font-size:14px;line-height:1.5}
+.cmp{display:grid;grid-template-columns:minmax(96px,140px) minmax(0,1fr) minmax(130px,auto);gap:8px 16px;align-items:center}
+.cmp .name{font-weight:600;grid-row:span 2}
+.cmp-note{margin:-6px 0 4px;padding-left:156px;font-size:13px;font-weight:600}
+@media (max-width:640px){.cmp-note{padding-left:0}}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dup{border:1px solid var(--warn-line);border-radius:12px;overflow:hidden}
+.dup-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:12px 16px;background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:14px}
+.dup-ids{display:flex;flex-wrap:wrap;gap:16px;padding:12px 16px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid #C9CED6;background:#fff;color:var(--ink);font-size:14px;cursor:pointer}
+.chip.blue{border-color:var(--blue);color:var(--blue-ink)}
+.chip:hover{border-color:var(--blue)}
+.meta{font-size:12px;color:var(--muted)}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.dot{width:8px;height:8px;border-radius:4px;background:var(--blue);animation:p 1s infinite alternate}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes p{from{opacity:.25}to{opacity:1}}
+
+form.ask{position:sticky;bottom:0;padding:12px 0 20px;background:linear-gradient(to bottom,rgba(244,245,247,0),var(--bg) 30%);display:flex;flex-direction:column;gap:8px}
+.ask-box{display:flex;gap:10px;padding:8px;border-radius:14px;background:#fff;border:1px solid #C9CED6}
+.ask-box:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.ask-box input{flex:1 1 auto;min-width:0;min-height:44px;padding:0 12px;border:none;outline:none;background:transparent}
+.send{width:44px;height:44px;border-radius:10px;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.send:disabled{opacity:.5;cursor:default}
+.hint{font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">
+    <div class="logo"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+    <div><b>Tiền đi đâu?</b><small>Giải thích chi tiêu từ sao kê</small></div>
+  </div>
+  <button type="button" class="btn-new" id="new">
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    Câu hỏi mới</button>
+  <nav aria-label="Câu hỏi gợi ý">
+    <span class="eyebrow">Hỏi nhanh</span>
+    <button type="button" data-q>Tháng này tiền đi đâu hết vậy?</button>
+    <button type="button" data-q>Tháng 11 so với tháng 10 tiêu nhiều hơn ở đâu?</button>
+    <button type="button" data-q>Tháng 10 có bị trừ hai lần không?</button>
+    <button type="button" data-q>Tuần trước ăn uống bao nhiêu?</button>
+    <button type="button" data-q>Tuần đầu tiên của tháng 9 tiêu bao nhiêu?</button>
+    <button type="button" data-q>Tháng 9 tôi uống cà phê hết bao nhiêu?</button>
+  </nav>
+  <section class="range" aria-label="Dữ liệu đang có">
+    <span class="eyebrow">Dữ liệu đang có</span>
+    <strong id="range">…</strong>
+    <div id="sources"></div>
+  </section>
+  <div class="who">
+    <div class="avatar" id="uid">…</div>
+    <div><b>Người dùng demo</b><small id="uid-note">Phiên gán sẵn</small></div>
+  </div>
+</aside>
+
+<main>
+  <header class="top wrap">
+    <div>
+      <h1>Hỏi đáp chi tiêu</h1>
+      <span class="muted" id="sub" style="font-size:14px"></span>
+    </div>
+    <span class="pill" id="model-pill">model: …</span>
+  </header>
+
+  <div class="wrap" id="thread" aria-live="polite">
+    <div class="empty" id="empty">
+      <h2>Hỏi bất cứ điều gì về chi tiêu của bạn</h2>
+      <span>Số tiền do code tính từ sao kê và được kiểm lại trước khi hiển thị.</span>
+      <div class="chips" style="justify-content:center">
+        <button type="button" class="chip" data-q>Tháng này tiền đi đâu hết vậy?</button>
+        <button type="button" class="chip" data-q>Tháng 10 ăn uống hết bao nhiêu?</button>
+      </div>
+    </div>
+  </div>
+
+  <form class="ask wrap" id="form">
+    <div class="ask-box">
+      <label for="ask" class="sr">Câu hỏi về chi tiêu</label>
+      <input id="ask" type="text" maxlength="500" autocomplete="off" placeholder="Hỏi về chi tiêu của bạn, ví dụ “Tháng 10 ăn uống hết bao nhiêu?”">
+      <button type="submit" class="send" id="send" aria-label="Gửi câu hỏi">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <span class="hint">Chỉ đọc và giải thích giao dịch của bạn. Không tư vấn đầu tư, không chuyển tiền. Dữ liệu giả có seed.</span>
+  </form>
+</main>
+</div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const thread = $("#thread"), form = $("#form"), input = $("#ask"), send = $("#send");
+let LABELS = {};
+let busy = false;
+
+/* ---------- định dạng: frontend chỉ định dạng số nhận được, không tự tính tổng ---------- */
+const money = (v) => Math.trunc(Number(v) || 0).toLocaleString("de-DE") + "đ";
+const signed = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + money(Math.abs(v));
+const pct = (v) => (v == null ? "—" : String(Number(v).toFixed(1)).replace(".", ",") + "%");
+const dm = (iso) => iso ? iso.slice(8, 10) + "/" + iso.slice(5, 7) : "";
+const dmy = (iso) => iso ? dm(iso) + "/" + iso.slice(0, 4) : "";
+const label = (c) => LABELS[c] || c;
+const src = (s) => (s === "the" ? "Thẻ tín dụng" : "Tài khoản");
+const monthName = (m) => "Tháng " + Number(m.slice(5, 7));
+
+/* h("div.cls", {attrs}, ...children) — luôn dùng textContent, mô tả giao dịch không bao giờ thành HTML */
+function h(tag, attrs, ...kids) {
+  const [name, ...cls] = tag.split(".");
+  const el = document.createElement(name);
+  if (cls.length) el.className = cls.join(" ");
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "style") el.style.cssText = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat(Infinity)) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : String(kid));
+  return el;
+}
+const svg = (d, size = 18) => {
+  const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  s.setAttribute("width", size); s.setAttribute("height", size); s.setAttribute("viewBox", "0 0 24 24");
+  s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor"); s.setAttribute("stroke-width", "2");
+  s.setAttribute("stroke-linecap", "round"); s.setAttribute("stroke-linejoin", "round"); s.setAttribute("aria-hidden", "true");
+  s.innerHTML = d; return s;
+};
+/* Lời model: chỉ nhận **đậm**, còn lại là chữ thường (không bao giờ dựng HTML từ text) */
+const rich = (text) => String(text).replace(/^#+\s*/gm, "").split(/\*\*(.+?)\*\*/g)
+  .map((part, i) => (i % 2 ? h("b", {}, part) : part.replace(/\*/g, "")));
+const chip = (text, cls) => h("button.chip" + (cls ? "." + cls : ""), { type: "button", onclick: () => ask(text) }, text);
+
+/* ---------- API ---------- */
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? {} :
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || ("Lỗi " + res.status));
+  return data;
+}
+
+/* ---------- luồng hỏi ---------- */
+async function ask(text, slot) {
+  text = (text || "").trim();
+  if (!text || busy) return;
+  busy = true; send.disabled = true;
+  $("#empty")?.remove();
+  if (!slot) {
+    thread.append(h("div.q", {}, text));
+    slot = h("article", {});
+    thread.append(slot);
+  }
+  slot.replaceChildren(h("div.loading", {}, h("span.dot"), h("span.dot"), h("span.dot"), h("span", {}, "Đang tính từ sao kê…")));
+  slot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  try {
+    const res = await api("/api/ask", { text });
+    slot.replaceChildren(...render(res, text, slot));
+  } catch (e) {
+    slot.replaceChildren(h("div.bubble.err", {}, "Không trả lời được: " + e.message),
+      h("div.chips", {}, h("button.chip", { type: "button", onclick: () => { busy = false; ask(text, slot); } }, "Thử lại")));
+  } finally {
+    busy = false; send.disabled = false; input.focus();
+  }
+}
+
+function render(res, question, slot) {
+  const d = res.data || { kind: "info", message: res.output };
+  const meta = res.meta && res.meta.tokens_in
+    ? h("span.meta", {}, `model ${res.meta.models.join(", ") || "—"} · ${res.meta.model_calls} lần gọi · token ${res.meta.tokens_in}/${res.meta.tokens_out}`)
+    : null;
+  const r = RENDER[d.kind] || RENDER.info;
+  return [...r(d, question, slot), meta].flat(Infinity).filter((x) => x != null && x !== false);
+}
+
+const RENDER = {
+  tong_hop: renderSummary,
+  mot_nhom: renderSummary,
+  so_sanh: renderCompare,
+  tim_kiem: renderSearch,
+  kiem_trung: renderDuplicates,
+  clarify: (d) => [
+    h("div.kind", {}, h("span.tag", {}, "Hỏi lại"), h("span", {}, "Khoảng thời gian chưa rõ")),
+    h("div.bubble", {}, d.message),
+    h("div.chips", {}, chip("Tháng này tiền đi đâu?", "blue"), chip("Tháng 10 tiền đi đâu?", "blue"), chip("Tuần trước tiêu bao nhiêu?", "blue")),
+  ],
+  missing: (d) => [
+    h("div.kind", {}, h("span.tag.grey", {}, "Chưa có dữ liệu")),
+    h("div.bubble", {}, d.message),
+    h("div.chips", {}, chip("Tháng này tiền đi đâu?")),
+  ],
+  empty: (d) => [
+    periodTag("Không có giao dịch", d.period),
+    h("div.bubble", {}, d.message),
+    h("div.chips", {}, chip("Tuần này tiêu bao nhiêu?"), chip("Tháng này tiền đi đâu?")),
+  ],
+  refuse: (d) => [
+    h("div.kind", {}, h("span.tag.red", {}, "Ngoài phạm vi")),
+    h("div.bubble", {}, d.message),
+    h("div.chips", {}, chip("Tháng này tiền đi đâu?")),
+  ],
+  info: (d) => [h("div.bubble", {}, d.message || "")],
+};
+
+function periodTag(name, p) {
+  return h("div.kind", {}, h("span.tag", {}, name), h("span", {}, `Khoảng đã hiểu: ${dmy(p.from)} – ${dmy(p.to)}`));
+}
+
+function renderSummary(d, question, slot) {
+  const one = d.kind === "mot_nhom";
+  const shades = ["var(--blue)", "var(--blue-2)", "var(--blue-3)"];
+  const out = [periodTag(one ? "Một nhóm · " + label(d.category) : "Tổng hợp", d.period)];
+
+  const head = one
+    ? [label(d.category), money(d.groups[0] ? d.groups[0].tong_tien : 0), d.groups[0]
+        ? `${pct(d.groups[0].phan_tram)} tổng chi ${money(d.total)} · ${d.groups[0].so_giao_dich} giao dịch`
+        : `Tổng chi cả khoảng ${money(d.total)}`]
+    : ["Tổng chi", money(d.total), null];
+  const card = h("section.card", {},
+    h("div.total", {},
+      h("div", {}, h("span.muted", { style: "font-size:13px" }, head[0]), h("span.big.num", {}, head[1]),
+        head[2] ? h("span.muted", { style: "font-size:13px" }, head[2]) : null),
+      h("span.ok", {}, svg('<path d="M5 12l5 5L20 7"/>', 14), "Số do code tính và đã kiểm")),
+  );
+  if (d.groups.length && !one) {
+    card.append(h("div", { style: "display:flex;flex-direction:column;gap:14px" },
+      h("span", { style: "font-size:14px;font-weight:600" }, `${d.groups.length} nhóm chi lớn nhất`),
+      h("div.bars", {}, d.groups.map((g, i) => [
+        h("span", { style: "font-weight:600" }, label(g.nhom)),
+        h("div.track", {}, h("div.fill", { style: `width:${Math.min(100, g.phan_tram)}%;background:${shades[i] || shades[2]}` })),
+        h("span.right.num", {}, h("b", {}, money(g.tong_tien)), " · " + pct(g.phan_tram)),
+      ])),
+      d.unknown.tong_tien ? h("span.muted", { style: "font-size:13px" },
+        `Khoản “không rõ” (${money(d.unknown.tong_tien)}) vẫn tính vào tổng chi nhưng không xếp hạng.`) : null,
+    ));
+  } else if (one && !d.groups.length) {
+    card.append(h("span.muted", {}, "Không có giao dịch chi nào thuộc nhóm này trong khoảng đã chọn."));
+  }
+  if (d.narrative) card.append(h("p.narr", {}, rich(d.narrative)));
+  if (d.largest) card.append(h("div.strip", {},
+    h("span.eyebrow", {}, "Khoản lớn nhất"),
+    h("span.grow", {}, h("b", {}, d.largest.description || "(trống)"), ` · ${dmy(d.largest.date)} · ${src(d.largest.source)}`),
+    h("b.num", {}, money(d.largest.amount))));
+  out.push(card);
+
+  if (d.unknown.items.length) out.push(unknownSection(d.unknown, question, slot));
+  if (d.duplicates.length) out.push(dupSection(d.duplicates, d.total));
+
+  if (d.evidence.length) {
+    let prev = null;
+    out.push(h("section.card.tight", {}, h("details", { open: one ? true : null },
+      h("summary", {}, `Giao dịch làm căn cứ (${d.evidence.length})`),
+      h("div.tbl", { style: "margin-top:12px" }, h("table", {},
+        h("thead", {}, h("tr", {}, ["Nhóm", "Mã", "Ngày", "Diễn giải", "Số tiền", "Phí"].map((t, i) => h("th", { class: i > 3 ? "right" : null }, t)))),
+        h("tbody.num", {}, d.evidence.map((e) => {
+          const first = e.category !== prev; prev = e.category;
+          return h("tr", { class: first ? "group" : null },
+            h("td", { style: "font-weight:600" }, first ? label(e.category) : ""),
+            h("td.mono.muted", {}, e.tx_id), h("td", {}, dm(e.date)),
+            h("td.mono", {}, e.description || "(trống)"),
+            h("td.right", { style: "font-weight:600" }, money(e.amount)), h("td.right.muted", {}, money(e.fee)));
+        }))))),
+    ));
+  }
+
+  const ex = Object.entries(d.excluded).filter(([, v]) => v);
+  if (ex.length) out.push(h("section.card.tight", {},
+    h("h2", {}, "Không tính vào tổng chi"),
+    h("div.grid2", {}, ex.map(([k, v]) => h("div.tile", {}, h("span.muted", { style: "font-size:13px" }, label(k)), h("b.num", {}, money(v))))),
+    d.excluded.noi_bo ? h("span.muted", { style: "font-size:13px;line-height:1.5" },
+      "Trả nợ thẻ không cộng lại vì từng khoản chi đã nằm trong giao dịch thẻ — cộng nữa là đếm 2 lần.") : null));
+
+  const month = d.period.from.slice(0, 7);
+  const prevMonth = month === "2026-09" ? null : month === "2026-10" ? "9" : month === "2026-11" ? "10" : null;
+  out.push(h("div.chips", {},
+    prevMonth && !one ? chip(`${monthName(month)} so với tháng ${prevMonth} tiêu nhiều hơn ở đâu?`) : null,
+    !one && d.groups[0] ? chip(`${label(d.groups[0].nhom)} ${monthName(month).toLowerCase()} gồm những gì?`) : null,
+    chip(`${monthName(month)} có bị trừ hai lần không?`)));
+  return out;
+}
+
+function unknownSection(unknown, question, slot) {
+  const status = h("div.changed", {});
+  const sec = h("section.unk", { "aria-label": "Khoản không rõ" },
+    h("div.unk-head", {},
+      h("div", {}, h("h2", {}, `Khoản không rõ · ${unknown.items.length} giao dịch · ${money(unknown.tong_tien)}`),
+        h("small", {}, "Mô tả không đủ căn cứ nên hệ thống không đoán. Bạn chọn nhóm, code tính lại.")),
+      status),
+    unknown.items.map((it) => {
+      const sel = h("select", { "aria-label": "Chọn nhóm cho " + it.tx_id },
+        Object.keys(LABELS).filter((c) => SPENDING.includes(c)).map((c) => h("option", { value: c, selected: c === "khong_ro" || null }, label(c))));
+      sel.addEventListener("change", async () => {
+        sel.disabled = true;
+        try {
+          const ch = await api("/api/categories/" + encodeURIComponent(it.tx_id), { category: sel.value });
+          await ask(question, slot);
+          flash(slot, `Đã đổi ${ch.tx_id} sang ${label(ch.moi)}`, question);
+        } catch (e) { sel.disabled = false; status.replaceChildren(h("span", { style: "color:var(--bad)" }, e.message)); }
+      });
+      return h("div.unk-row", {},
+        h("span.mono.id", {}, it.tx_id), h("span.d", {}, dm(it.date)),
+        h("div.desc", {}, h("span.mono", {}, it.description || "(trống)"), h("span.muted", { style: "font-size:12px" }, src(it.source))),
+        h("span.amt.num", {}, money(it.amount)),
+        h("label", {}, h("span", {}, "Nhóm"), sel));
+    }),
+    h("div.unk-foot", {}, "Mô tả giao dịch chỉ là dữ liệu. Câu chữ trong mô tả không đổi được số."));
+  return sec;
+}
+
+/* Sau khi trả lời lại, gắn thông báo "đã đổi · Hoàn tác" vào đầu mục cần chú ý */
+function flash(slot, msg, question) {
+  const head = slot.querySelector(".unk-head") || slot.querySelector(".card");
+  if (!head) return;
+  const box = h("div.changed", {}, h("span", {}, msg),
+    h("button.btn-line", { type: "button", onclick: async () => {
+      try { await api("/api/categories/undo", {}); await ask(question, slot); }
+      catch (e) { box.replaceChildren(h("span", { style: "color:var(--bad)" }, e.message)); }
+    } }, "Hoàn tác"));
+  const old = head.querySelector(".changed"); old ? old.replaceWith(box) : head.append(box);
+}
+
+function dupSection(dups, total) {
+  return h("section.card.tight", { style: "border-color:var(--warn-line)" },
+    h("div.kind", {}, h("span.tag.warn", {}, "Nghi trừ 2 lần"), h("span", {}, "Chỉ cảnh báo, không loại khỏi tổng")),
+    dups.map((g) => h("div.dup", {},
+      h("div.dup-head", {}, h("span", {}, `${g.mo_ta} · ${dmy(g.ngay)}`), h("span.num", {}, money(g.so_tien) + " mỗi khoản")),
+      h("div.dup-ids.mono", {}, g.tx_ids.map((id) => h("span", {}, id))))),
+    h("p", { style: "margin:0;font-size:14px;line-height:1.55" }, "Đây chỉ là dấu hiệu cần kiểm tra với ngân hàng — có thể là 2 lần mua thật. Tổng chi vẫn là ",
+      h("b", {}, money(total)), "."));
+}
+
+function renderDuplicates(d) {
+  const out = [periodTag("Kiểm trừ 2 lần", d.period)];
+  if (!d.duplicates.length) {
+    out.push(h("div.bubble", {}, "Không tìm thấy cặp giao dịch trùng theo cùng nguồn, ngày, mô tả và số tiền. Tổng chi vẫn là ",
+      h("b", {}, money(d.total)), "."));
+  } else out.push(dupSection(d.duplicates, d.total));
+  if (d.narrative) out.push(h("p.narr", { style: "border:none;padding:0" }, rich(d.narrative)));
+  return out;
+}
+
+function renderSearch(d) {
+  const out = [periodTag("Theo diễn giải · " + d.label, d.period)];
+  const card = h("section.card", {},
+    h("div.total", {},
+      h("div", {}, h("span.muted", { style: "font-size:13px" }, d.label), h("span.big.num", {}, money(d.total)),
+        h("span.muted", { style: "font-size:13px" },
+          `${d.count} giao dịch · ${pct(d.share)} tổng chi ${money(d.total_spending)}`)),
+      h("span.ok", {}, svg('<path d="M5 12l5 5L20 7"/>', 14), "Số do code tính và đã kiểm")));
+  if (!d.count) card.append(h("span.muted", {}, "Không có khoản chi nào có diễn giải khớp trong khoảng này."));
+  if (d.merchants.length > 1) {
+    const max = Math.max(...d.merchants.map((m) => m.tong_tien), 1);
+    card.append(h("div", { style: "display:flex;flex-direction:column;gap:14px" },
+      h("span", { style: "font-size:14px;font-weight:600" }, "Theo diễn giải trên sao kê"),
+      h("div.bars", {}, d.merchants.map((m) => [
+        h("span.mono", { style: "word-break:break-word" }, m.description),
+        h("div.track", {}, h("div.fill", { style: `width:${(m.tong_tien * 100 / max).toFixed(1)}%` })),
+        h("span.right.num", {}, h("b", {}, money(m.tong_tien)), ` · ${m.so_giao_dich} lần`)]))));
+  }
+  if (d.narrative) card.append(h("p.narr", {}, rich(d.narrative)));
+  out.push(card);
+  if (d.items.length) out.push(h("section.card.tight", {}, h("details", { open: true },
+    h("summary", {}, `Các giao dịch khớp (${d.items.length})`),
+    h("div.tbl", { style: "margin-top:12px" }, h("table", {},
+      h("thead", {}, h("tr", {}, ["Mã", "Ngày", "Diễn giải", "Nguồn", "Số tiền"].map((t, i) => h("th", { class: i === 4 ? "right" : null }, t)))),
+      h("tbody.num", {}, d.items.map((e) => h("tr", {},
+        h("td.mono.muted", {}, e.tx_id), h("td", {}, dm(e.date)), h("td.mono", {}, e.description || "(trống)"),
+        h("td.muted", {}, src(e.source)), h("td.right", { style: "font-weight:600" }, money(e.amount))))))))));
+  const month = d.period.from.slice(0, 7);
+  out.push(h("div.chips", {},
+    month !== "2026-09" ? chip(`${monthName(month)} có bị trừ hai lần không?`) : null,
+    chip(`${monthName(month)} tiền đi đâu hết vậy?`)));
+  return out;
+}
+
+function renderCompare(d) {
+  const [a, b] = d.months;
+  const win = d.window === "ca_thang" ? "cả tháng" : "ngày " + d.window.replace("-", "–");
+  const out = [h("div.kind", {}, h("span.tag", {}, "So sánh 2 tháng"), h("span", {}, "Cửa sổ: " + win + " của cả hai tháng"))];
+  if (d.window !== "ca_thang") out.push(h("div.info", {}, svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>'),
+    h("span", {}, `Dữ liệu ${monthName(b.month).toLowerCase()} chưa đủ tháng, nên cả hai tháng cùng tính ${win}.`)));
+  out.push(h("section.stats", {},
+    h("div.stat", {}, h("span.muted", { style: "font-size:13px" }, `${monthName(a.month)} · ${win}`), h("b.num", {}, money(a.total))),
+    h("div.stat", {}, h("span.muted", { style: "font-size:13px" }, `${monthName(b.month)} · ${win}`), h("b.num", {}, money(b.total))),
+    h("div.stat.dark", {}, h("span", { style: "font-size:13px" }, "Chênh lệch tổng"), h("b.num", {}, signed(d.delta)))));
+
+  if (d.increases.length) {
+    const max = Math.max(...d.increases.flatMap((r) => [r.truoc, r.sau]), 1);
+    const w = (v) => (v * 100 / max).toFixed(1) + "%"; /* chỉ tỉ lệ vẽ thanh, không phải số liệu */
+    out.push(h("section.card", {},
+      h("div", { style: "display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px" },
+        h("h2", {}, `${d.increases.length} nhóm tăng nhiều nhất`),
+        h("div.legend", {}, h("span", {}, h("i", { style: "background:var(--blue-pale)" }), monthName(a.month)),
+          h("span", {}, h("i", { style: "background:var(--blue)" }), monthName(b.month)))),
+      h("div", { style: "display:flex;flex-direction:column;gap:20px" }, d.increases.map((r) => [
+        h("div.cmp", {},
+          h("span.name", {}, label(r.nhom)),
+          h("div.track", {}, h("div.fill", { style: `width:${w(r.truoc)};background:var(--blue-pale)` })),
+          h("span.right.muted.num", { style: "font-size:13px" }, money(r.truoc)),
+          h("div.track", {}, h("div.fill", { style: `width:${w(r.sau)}` })),
+          h("span.right.num", {}, h("b", {}, money(r.sau)))),
+        h("div.cmp-note.num", {}, signed(r.tien) + (r.phan_tram == null ? " · tháng đầu chưa có" : " · +" + pct(r.phan_tram))),
+      ]))));
+  }
+  if (d.biggest_drop) out.push(h("section.strip.white", {},
+    h("span.eyebrow", {}, "Giảm nhiều nhất"),
+    h("span.grow", {}, `${label(d.biggest_drop.nhom)} — ${monthName(a.month).toLowerCase()} ${money(d.biggest_drop.truoc)}, ${monthName(b.month).toLowerCase()} ${money(d.biggest_drop.sau)}.`),
+    h("b.num", {}, signed(d.biggest_drop.tien))));
+  if (d.narrative) out.push(h("p.narr", { style: "border:none;padding:0" }, rich(d.narrative)));
+  out.push(h("div.chips", {}, chip(`${monthName(b.month)} tiền đi đâu hết vậy?`),
+    d.increases[0] ? chip(`${label(d.increases[0].nhom)} ${monthName(b.month).toLowerCase()} gồm những gì?`) : null));
+  return out;
+}
+
+/* ---------- khởi động ---------- */
+let SPENDING = [];
+form.addEventListener("submit", (e) => { e.preventDefault(); const t = input.value; input.value = ""; ask(t); });
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-q]"); if (b) ask(b.textContent); });
+$("#new").addEventListener("click", () => {
+  thread.replaceChildren(h("div.empty", { id: "empty" }, h("h2", {}, "Câu hỏi mới"), h("span", {}, "Gõ câu hỏi ở ô bên dưới hoặc chọn một câu hỏi nhanh.")));
+  input.focus();
+});
+
+(async () => {
+  try {
+    const [range, cats] = await Promise.all([api("/api/range"), api("/api/categories")]);
+    cats.forEach((c) => { LABELS[c.id] = c.label; if (c.spending !== false) SPENDING.push(c.id); });
+    $("#range").textContent = `${dmy(range.from)} – ${dmy(range.to)}`;
+    $("#sources").replaceChildren(...range.sources.map((s) => h("span", {}, s)));
+    $("#uid").textContent = range.user_id;
+    $("#uid-note").textContent = "Phiên gán sẵn " + range.user_id;
+    $("#sub").textContent = `Dữ liệu đến ${dmy(range.to)}`;
+    $("#model-pill").textContent = "model: " + range.model;
+  } catch (e) {
+    $("#range").textContent = "Không đọc được dữ liệu: " + e.message;
+  }
+  input.focus();
+})();
+</script>
+</body>
+</html>
