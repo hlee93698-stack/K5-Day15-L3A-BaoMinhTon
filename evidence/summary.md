@@ -3,7 +3,7 @@
 > Xong trước **CP3 10:00 Thứ Bảy 28/11**. Chấm ở rubric R1. Người phụ trách: Hoàng Lam Minh.
 > Tối thiểu **≥1 nguồn đạt ngưỡng**. Nhóm dùng: khảo sát (nguồn chính) + phỏng vấn (kiểm lại vì sao).
 > Giả thuyết viết trước: [hypothesis.md](hypothesis.md).
-> **Trạng thái:** số khảo sát là bản chụp lúc **27/11 17:37 (22 phiếu)**, form vẫn đang mở. Bản chốt sẽ cập nhật bằng cách tải lại `results.csv` và chạy lại `python evidence/survey/count.py`.
+> **Trạng thái:** khảo sát **đã chốt — 22 phiếu** (14:55–17:37 ngày 27/11; form đã đóng, kiểm lại lúc 27/11/2026 23:55 không có phiếu mới). Phỏng vấn 3/3 đã xong. Đếm lại: `python evidence/survey/count.py`.
 
 ## 1. Nguồn đã dùng
 
@@ -76,7 +76,7 @@ Phỏng vấn nói: **khớp** ở chỗ cả 3 chỉ biết một phần và đ
 - **Không muốn nhập tay** (3/3) — khảo sát không hỏi trực tiếp, phỏng vấn cho thấy rõ: giải pháp phải dùng dữ liệu giao dịch có sẵn.
 - **Muốn thấy thay đổi bất thường** hơn là chi tiết từng khoản (P2, P3; P1 cũng muốn biết "có khoản nào tiêu quá mức mà không nhận ra") — khảo sát chưa hỏi điều này.
 
-## 5. Kết luận *(khảo sát: bản chụp 22 phiếu, chốt lại khi đóng form · phỏng vấn: 3/3 đã xong)*
+## 5. Kết luận *(khảo sát đã chốt 22 phiếu · phỏng vấn 3/3)*
 
 Giả thuyết ở `evidence/hypothesis.md`: **đúng một phần, phải đổi trọng tâm**.
 - **Đạt** ngưỡng 1: 16/21 (76%) mất ≥15 phút hoặc không biết rõ (ngưỡng ≥50%) — nhưng gần như toàn bộ nhờ vế "không biết rõ" (15/21), vế "mất ≥15 phút" chỉ 5/21 (24%).
