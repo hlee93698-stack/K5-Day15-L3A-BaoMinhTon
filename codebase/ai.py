@@ -17,7 +17,10 @@ Chế độ giả (mặc định khi .env chưa có MODEL_PROVIDER, hoặc MODEL
 Nối model thật: điền .env (chép từ .env.example), rồi viết nhánh gọi API ở dưới theo docs/connect-model.md
 (có ví dụ OpenAI, Claude, model chạy trên máy, và cách nối nhà cung cấp khác). Không dán API key vào file này.
 """
+import json
 import os
+import urllib.error
+import urllib.request
 
 from tracing import model_call
 
@@ -41,6 +44,62 @@ load_env()
 MODEL_PROVIDER = (os.environ.get("MODEL_PROVIDER") or "fake").strip().lower()
 MODEL_NAME = (os.environ.get("MODEL_NAME") or "").strip()
 API_KEY = (os.environ.get("API_KEY") or "").strip()
+SHOW_RAW = (os.environ.get("SHOW_RAW") or "").strip().lower() in ("1", "true", "yes")
+
+
+def post_json(url, headers, body, timeout=60):
+    """Gửi POST JSON bằng thư viện chuẩn và trả JSON phản hồi."""
+    request = urllib.request.Request(
+        url, data=json.dumps(body).encode("utf-8"), method="POST",
+        headers=dict({"Content-Type": "application/json"}, **headers))
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf-8", "replace")[:500]
+        raise RuntimeError("HTTP %d: %s" % (error.code, detail))
+    except urllib.error.URLError as error:
+        raise RuntimeError("Không kết nối được model API: %s" % error.reason)
+    if SHOW_RAW:
+        print(json.dumps(data, ensure_ascii=False, indent=2)[:3000])
+    return data
+
+
+def _require_config(require_key=True):
+    if not MODEL_NAME:
+        raise RuntimeError("MODEL_NAME đang trống trong .env")
+    if require_key and not API_KEY:
+        raise RuntimeError("API_KEY đang trống trong .env")
+
+
+def call_openai(system, user):
+    _require_config()
+    url = (os.environ.get("MODEL_URL") or "https://api.openai.com/v1/chat/completions").strip()
+    messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": user}]
+    data = post_json(url, {"Authorization": "Bearer " + API_KEY}, {"model": MODEL_NAME, "messages": messages})
+    usage = data["usage"]
+    return {"text": data["choices"][0]["message"]["content"],
+            "tokens_in": usage["prompt_tokens"], "tokens_out": usage["completion_tokens"]}
+
+
+def call_claude(system, user):
+    _require_config()
+    url = (os.environ.get("MODEL_URL") or "https://api.anthropic.com/v1/messages").strip()
+    data = post_json(url, {"x-api-key": API_KEY, "anthropic-version": "2023-06-01"},
+                     {"model": MODEL_NAME, "max_tokens": 1024, "system": system or "",
+                      "messages": [{"role": "user", "content": user}]})
+    text = "".join(block.get("text", "") for block in data.get("content", []) if block.get("type") == "text")
+    usage = data["usage"]
+    return {"text": text, "tokens_in": usage["input_tokens"], "tokens_out": usage["output_tokens"]}
+
+
+def call_ollama(system, user):
+    _require_config(require_key=False)
+    url = (os.environ.get("MODEL_URL") or "http://localhost:11434/api/chat").strip()
+    messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": user}]
+    data = post_json(url, {}, {"model": MODEL_NAME, "messages": messages, "stream": False}, timeout=300)
+    return {"text": data["message"]["content"], "tokens_in": data.get("prompt_eval_count", 0),
+            "tokens_out": data.get("eval_count", 0)}
 
 
 @model_call
@@ -49,8 +108,13 @@ def call_model(system: str, user: str) -> dict:
         last = (user.strip().splitlines() or [""])[-1]
         return {"text": "[câu trả lời giả — chưa nối model] " + last[:60], "model": "fake", "tokens_in": 0, "tokens_out": 0}
 
-    # NHÓM VIẾT: gọi model thật ở đây (theo MODEL_PROVIDER, MODEL_NAME, API_KEY) rồi trả đúng 4 khoá.
-    # Ví dụ chép được cho từng nhà cung cấp: docs/connect-model.md mục 2.
-    raise NotImplementedError(
-        "chưa viết phần gọi model thật cho MODEL_PROVIDER=%s trong codebase/ai.py — xem docs/connect-model.md"
-        % MODEL_PROVIDER)
+    if MODEL_PROVIDER in ("openai", "openai_compatible", "deepseek"):
+        result = call_openai(system, user)
+    elif MODEL_PROVIDER in ("anthropic", "claude"):
+        result = call_claude(system, user)
+    elif MODEL_PROVIDER == "ollama":
+        result = call_ollama(system, user)
+    else:
+        raise RuntimeError("MODEL_PROVIDER không được hỗ trợ: %s" % MODEL_PROVIDER)
+    return {"text": result["text"], "model": MODEL_NAME,
+            "tokens_in": int(result["tokens_in"]), "tokens_out": int(result["tokens_out"])}
