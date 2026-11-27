@@ -12,6 +12,12 @@ SPENDING_CATEGORIES = (
 )
 NON_SPENDING_CATEGORIES = ("thu_nhap", "hoan_tien", "noi_bo")
 ALL_CATEGORIES = SPENDING_CATEGORIES + NON_SPENDING_CATEGORIES
+CATEGORY_LABELS = {
+    "an_uong": "Ăn uống", "di_lai": "Đi lại", "mua_sam": "Mua sắm", "hoa_don": "Hóa đơn",
+    "nha_o": "Nhà ở", "giai_tri": "Giải trí", "suc_khoe": "Sức khỏe", "giao_duc": "Giáo dục",
+    "tien_mat": "Tiền mặt", "gia_dinh": "Gia đình", "khong_ro": "Không rõ",
+    "thu_nhap": "Thu nhập", "hoan_tien": "Hoàn tiền", "noi_bo": "Trả nợ thẻ của chính bạn",
+}
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
