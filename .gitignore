@@ -38,6 +38,13 @@ data-btc/
 
 # Token / cấu hình công cụ cục bộ — không commit
 .markdown-collab/
+.mcp.json
+**/.mcp-server.json
+*.mcp.skill
+.agents/
+.claude/
+.cursor/
+.gemini/
 # Nhãn người dùng sửa khi chạy thử
 runtime/
 # Ảnh / PDF sao kê — không bao giờ commit (luật track E)
