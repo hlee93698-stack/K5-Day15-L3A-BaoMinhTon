@@ -35,7 +35,48 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 ## §4. Thiết kế *(guide 2.2, 3.2)*
 - **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả):
 - Không làm (≥3 điều):
-- **Sơ đồ** (ảnh / Mermaid / draw.io): [chèn ở đây]
+- **Sơ đồ** — flow tổng thể từ câu hỏi của người dùng đến kết thúc (bản nháp, chốt ở CP2):
+
+  ```mermaid
+  flowchart TD
+      U(["👤 Nhân viên văn phòng hỏi:<br/>'Tháng này tiền đi đâu hết vậy?'"]) --> APP["App chat<br/>(codebase/app.py)"]
+      APP --> GUARD{"Chặn phạm vi<br/>(quy tắc trong code + AI phân loại)"}
+
+      GUARD -->|"Xin tư vấn đầu tư / xin giao dịch thay /<br/>hỏi chi tiêu người khác / xin OTP"| REFUSE["Từ chối lịch sự,<br/>nói rõ giới hạn, gợi ý việc làm được"]
+      REFUSE --> END
+
+      GUARD -->|"Câu hỏi về chi tiêu của mình"| PARSE["AI hiểu câu hỏi:<br/>khoảng thời gian + loại câu hỏi<br/>(tổng hợp / so 2 tháng / 1 nhóm chi)"]
+      PARSE --> CLEAR{"Đủ rõ?"}
+      CLEAR -->|"Mơ hồ ('dạo này', từ lóng không hiểu)"| ASK["Hỏi lại ĐÚNG 1 câu<br/>(vd: 'Bạn muốn xem tháng 11 phải không?')"]
+      ASK --> U
+
+      CLEAR -->|"Rõ"| GET["🔧 get_transactions(user, from, to)<br/>đọc dữ liệu giả có seed (data/)"]
+      GET --> HAS{"Có dữ liệu<br/>khoảng đó?"}
+      HAS -->|"Không (tháng tương lai / chưa có)"| MISSING["Nói rõ thiếu dữ liệu,<br/>không ước số"]
+      MISSING --> END
+
+      HAS -->|"Có"| CAT["🔧 categorize(tx)<br/>B1: luật chuẩn hoá tên nơi bán (code)<br/>B2: AI gán nhóm cho khoản còn lại"]
+      CAT --> SURE{"AI chắc chắn?"}
+      SURE -->|"Không (CK không nội dung, tên lạ)"| UNK["Gán nhóm 'không rõ'<br/>— không đoán"]
+      SURE -->|"Có"| GROUP["Gán nhóm chi"]
+      UNK --> SUM
+      GROUP --> SUM["🔧 sum_by_category / compare_months<br/>CODE cộng, tính %, xếp hạng"]
+
+      SUM --> WRITE["AI viết câu trả lời<br/>CHỈ chép số từ output công cụ"]
+      WRITE --> VERIFY{"Code kiểm: mọi con số trong<br/>câu trả lời khớp output công cụ?"}
+      VERIFY -->|"Lệch"| RETRY["Viết lại 1 lần;<br/>vẫn lệch → trả bảng số thuần từ code"]
+      RETRY --> SHOW
+      VERIFY -->|"Khớp 100%"| SHOW["Hiện cho người dùng:<br/>• Top 3 nhóm chi + số tiền + %<br/>• Bảng giao dịch làm căn cứ<br/>• Danh sách khoản 'không rõ'"]
+
+      SHOW --> FIX{"Người dùng sửa nhóm<br/>khoản 'không rõ'?"}
+      FIX -->|"Có — người bấm chọn"| UPD["🔧 update_category(tx, nhóm)<br/>ghi lại, đảo được"]
+      UPD --> SUM
+      FIX -->|"Không / đã xong"| END(["✅ Người dùng biết tiền đi đâu,<br/>có căn cứ, con số đúng"])
+
+      APP -.-> LOG[("tracing: log mọi lượt gọi<br/>model + công cụ → eval/, cost/")]
+  ```
+
+  **Đọc sơ đồ:** ô có 🔧 là công cụ trong `codebase/tools.py`. **AI chỉ quyết 3 việc**: hiểu câu hỏi và khoảng thời gian, gán nhóm (hoặc "không rõ") cho giao dịch mơ hồ, và viết lời giải thích. **Mọi phép tính do code làm**, có code kiểm lại trước khi hiện. **Đổi nhóm chi do người dùng bấm**, AI không tự đổi. Bốn nhánh dừng sớm (từ chối, hỏi lại, thiếu dữ liệu, số lệch) ứng với §5–§6.
 - **Hình dạng:** [ ] workflow cố định · [ ] một agent · [ ] nhiều agent — 2 dòng lý do, và vì sao **không** chọn hình dạng phức tạp hơn:
 - **AI dựa vào đâu** — mỗi công cụ (khớp `codebase/tools.py`):
 
