@@ -15,7 +15,7 @@
 - **Giờ mở form:** 27/11/2026, phiếu đầu tiên lúc 14:55
 - **Bản chụp đang dùng:** 27/11/2026 17:37 — 22 phiếu (form vẫn mở)
 - **Giờ chốt (ngừng nhận để đếm):** __/11/2026 __:__
-- **Tổng số câu trả lời lúc chốt:** __ · trong đó người trong nhóm (loại ra): __ *(chưa kiểm — hỏi lại cả nhóm)* · còn lại: __
+- **Tổng số câu trả lời lúc chốt:** __ · trong đó người trong nhóm (loại ra): 0 *(đã hỏi cả nhóm 27/11: không thành viên nào điền form)* · còn lại: __
 
 ## Bộ câu hỏi (chép nguyên văn từ form)
 

@@ -11,7 +11,7 @@
 |---|---|---|
 | Đào data — review Google Play (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | ☐ (chưa làm) | `evidence/data-mining.md` |
 | Phỏng vấn (≥3 người ngoài nhóm, đúng người dùng) | ☐ 0/3 | [P1](interviews/P1.md) · [P2](interviews/P2.md) · [P3](interviews/P3.md) |
-| Khảo sát (≥20 người ngoài nhóm, đúng người dùng) | ☑ n = 22 *(chờ xác nhận không có phiếu của thành viên nhóm)* | [questions.md](survey/questions.md) · [results.csv](survey/results.csv) · [count.py](survey/count.py) |
+| Khảo sát (≥20 người ngoài nhóm, đúng người dùng) | ☑ n = 22 (đã xác nhận với cả nhóm: không có phiếu của thành viên nhóm) | [questions.md](survey/questions.md) · [results.csv](survey/results.csv) · [count.py](survey/count.py) |
 
 ## 2. Số chính
 
