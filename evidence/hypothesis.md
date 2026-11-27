@@ -3,6 +3,7 @@
 > Viết **trước** khi đọc câu trả lời khảo sát đầu tiên hay hỏi người đầu tiên, để không sửa cho khớp kết quả. Kết quả ngược giả thuyết vẫn đủ điểm nếu số là thật.
 
 - Ngày giờ viết: 27/11/2026 16:45 · người viết: Hoàng Lam Minh
+- **Ghi chú thời điểm (trung thực):** form khảo sát đã mở nhận phiếu từ 27/11 14:55. Giả thuyết này viết lúc 16:45 khi **chưa ai trong nhóm xem câu trả lời nào**; nội dung giả thuyết đã có từ trước trong `canvas.md` (commit 16:12). Câu trả lời được xem lần đầu sau khi file này đã commit; ngưỡng 50% và 2/3 **không sửa** sau khi xem số.
 - Người dùng chính: nhân viên văn phòng đi làm dưới 3 năm, nhận lương 1 lần/tháng, chi tiêu hằng ngày qua ví điện tử và/hoặc app ngân hàng.
 - **Mình nghĩ:** nhân viên văn phòng đi làm dưới 3 năm gặp khó khi cuối tháng xem lại tiền đã đi vào những khoản nào, vì lịch sử giao dịch dài, tên giao dịch lộn xộn (một nơi bán nhiều kiểu tên, chuyển khoản không ghi nội dung) và phải tự cộng, hậu quả là mất trên 15 phút hoặc bỏ dở, không biết rõ tiền đi đâu, tháng sau vẫn hụt tiền.
 - **Có thể còn cách giải thích khác:**

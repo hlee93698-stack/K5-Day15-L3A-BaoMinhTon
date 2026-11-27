@@ -21,7 +21,7 @@
 | # | Câu hỏi | Kiểu | Lựa chọn |
 |---|---|---|---|
 | 1 | Bạn hiện là * | Chọn một | Sinh viên · Đi làm dưới 3 năm · Đi làm từ 3 năm trở lên · Người lo chi tiêu cả nhà · Mục khác |
-| 2 | Bạn chi tiêu hằng ngày chủ yếu qua * | Chọn một | Ví điện tử · App ngân hàng · Thẻ tín dụng · Tiền mặt |
+| 2 | Bạn chi tiêu hằng ngày chủ yếu qua * | Chọn nhiều | Ví điện tử · App ngân hàng · Thẻ tín dụng · Tiền mặt |
 | 3 | Lần gần nhất bạn ngồi xem lại tiền của mình đã đi vào những khoản nào là khi nào? * | Chọn một | Tuần này · Tuần trước · Đầu tháng này · Hơn 1 tháng trước · Chưa bao giờ |
 | 4 | Trong 1 tháng qua, bạn xem lại chi tiêu như vậy mấy lần? (ghi số, ví dụ 0, 1, 3) * | Số | — |
 | 5 | Lần gần nhất đó, bạn đã làm thế nào? * | Chọn nhiều | Kéo xem lịch sử giao dịch trong app · Xem biểu đồ/thống kê có sẵn trong app · Chép ra Excel/Google Sheets · Dùng app quản lý chi tiêu riêng · Cộng nhẩm/ghi giấy · Hỏi ChatGPT/AI · Bỏ qua, không xem nữa · Mục khác |
