@@ -23,7 +23,7 @@ Nhãn mục đích của một giao dịch tiền ra: `an_uong`, `di_lai`, `mua_
 _Tránh dùng_: Loại tiền, tag
 
 **Không rõ** (`khong_ro`):
-Nhóm của giao dịch không đủ căn cứ để gán (chuyển khoản không nội dung, QR/POS không tên). Hệ thống không đoán; người dùng tự chọn nhóm. Vẫn tính vào tổng chi nhưng không vào top 3.
+Nhóm của giao dịch không đủ căn cứ để gán. Mô tả không có nội dung (`CK`, `chuyen tien`, rỗng, `QRPAY`, `POS`) được **luật** gán thẳng, không gửi AI; khoản khác chỉ vào nhóm này khi AI không chắc. Hệ thống không đoán; người dùng tự chọn nhóm bằng lệnh `/sua`. Vẫn tính vào tổng chi nhưng không vào top 3.
 _Tránh dùng_: Khác, linh tinh
 
 **Giao dịch không phải chi**:
@@ -35,8 +35,12 @@ Tổng `amount` của giao dịch `out` có nhóm chi (gồm `khong_ro`), trong 
 _Tránh dùng_: Số tiền đã tiêu ước tính
 
 **Điều chỉnh nhóm chi**:
-Thay đổi nhóm chi do người dùng bấm. Hệ thống giữ nhóm cũ và nhóm mới để hoàn tác. Model không bao giờ tự điều chỉnh.
+Thay đổi nhóm chi do người dùng gõ lệnh `/sua <mã giao dịch> <nhóm>`; `/hoantac` trả về nhóm cũ. Hệ thống giữ nhóm cũ và nhóm mới để hoàn tác. Model không bao giờ tự điều chỉnh.
 _Tránh dùng_: AI sửa giao dịch, tự học nhãn
+
+**Nghi trừ 2 lần**:
+Từ 2 giao dịch tiền ra trở lên cùng nguồn, cùng ngày, cùng mô tả đã chuẩn hoá, cùng số tiền. Code chỉ cảnh báo kèm căn cứ để người dùng tự kiểm; không loại khỏi tổng chi, không khẳng định là lỗi.
+_Tránh dùng_: Giao dịch lỗi, gian lận
 
 **Cửa sổ so sánh**:
 Khoảng ngày giống nhau ở hai tháng đem so. Dữ liệu tháng 11 dừng ở ngày 25 thì so ngày 01–25 của cả hai tháng.
