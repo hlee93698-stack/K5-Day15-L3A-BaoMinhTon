@@ -57,66 +57,92 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): không —
   4. Không đọc sao kê thật, không kết nối ngân hàng / ví thật — chỉ dữ liệu giả có seed.
   5. Không trả lời về chi tiêu của người khác (vợ/chồng, bạn bè…).
   6. Không tự đổi nhóm chi — chỉ người dùng đổi.
-- **Sơ đồ** — flow tổng thể từ câu hỏi của người dùng đến kết thúc:
+- **Sơ đồ kiến trúc** — 4 lớp: ① Input → ② AI Core → ③ Chặn rủi ro → ④ Output:
 
   ```mermaid
   flowchart TD
-      U(["👤 Nhân viên văn phòng hỏi:<br/>'Tháng này tiền đi đâu hết vậy?'"]) --> APP["App chat<br/>(codebase/app.py)"]
-      APP --> GUARD{"Chặn phạm vi<br/>(quy tắc trong code + AI phân loại)"}
+      subgraph L1["① INPUT"]
+          U(["👤 Nhân viên văn phòng hỏi:<br/>'Tháng này tiền đi đâu hết vậy?'"])
+          APP["python run.py → codebase/app.py → agent.answer(text)<br/>user_id = U1 do CODE gán theo phiên — model không chọn được"]
+      end
 
-      GUARD -->|"Xin tư vấn đầu tư / xin giao dịch thay /<br/>hỏi chi tiêu người khác / xin OTP"| REFUSE["Từ chối lịch sự,<br/>nói rõ giới hạn, gợi ý việc làm được"]
-      REFUSE --> END
+      subgraph L2["② AI CORE — AI chỉ quyết 3 việc, mọi phép tính do code"]
+          AI1["🤖 AI ①: phân loại phạm vi + hiểu câu hỏi<br/>khoảng thời gian · loại câu: tổng hợp / so 2 tháng / 1 nhóm chi"]
+          T1["🔧 get_transactions(user_id của phiên, from, to)<br/>đọc data/transactions_bank.csv + transactions_card.csv<br/>KHÔNG BAO GIỜ đọc labels.csv, summary_truth.csv"]
+          T2["🔧 categorize — bước luật (code):<br/>chuẩn hoá tên nơi bán · nhận lương / hoàn tiền / trả nợ thẻ"]
+          AI2["🤖 AI ②: gán nhóm cho khoản luật chưa nhận ra"]
+          T3["🔧 sum_by_category / compare_months<br/>CODE cộng · tính % · xếp hạng"]
+          AI3["🤖 AI ③: viết câu trả lời<br/>CHỈ chép số từ output công cụ"]
+      end
 
-      GUARD -->|"Câu hỏi về chi tiêu của mình"| PARSE["AI hiểu câu hỏi:<br/>khoảng thời gian + loại câu hỏi<br/>(tổng hợp / so 2 tháng / 1 nhóm chi)"]
-      PARSE --> CLEAR{"Đủ rõ?"}
-      CLEAR -->|"Mơ hồ ('dạo này', từ lóng không hiểu)"| ASK["Hỏi lại ĐÚNG 1 câu<br/>(vd: 'Bạn muốn xem tháng 11 phải không?')"]
-      ASK --> U
+      subgraph L3["③ CHẶN RỦI RO"]
+          GUARD{"R1 · Quy tắc code chặn từ khoá:<br/>đầu tư · chuyển tiền · OTP · chi tiêu người khác"}
+          CLEAR{"R2 · Khoảng thời gian đủ rõ?"}
+          HAS{"R3 · Có dữ liệu khoảng đó?"}
+          FENCE["R4 · Mô tả giao dịch đóng khung là DỮ LIỆU,<br/>không phải lệnh (chặn lệnh chèn)"]
+          SURE{"R5 · AI chắc chắn?"}
+          UNK["Gán 'không rõ' — không đoán"]
+          FILTER["R6 · Loại khỏi tổng chi: lương · hoàn tiền ·<br/>trả nợ thẻ của chính mình (tránh đếm 2 lần)"]
+          VERIFY{"R7 · Code kiểm: mọi con số trong<br/>câu trả lời khớp output công cụ?"}
+          RETRY["Viết lại 1 lần;<br/>vẫn lệch → chỉ trả bảng số do code tạo"]
+      end
 
-      CLEAR -->|"Rõ"| GET["🔧 get_transactions(user, from, to)<br/>đọc dữ liệu giả có seed (data/)"]
-      GET --> HAS{"Có dữ liệu<br/>khoảng đó?"}
-      HAS -->|"Không (tháng tương lai / chưa có)"| MISSING["Nói rõ thiếu dữ liệu,<br/>không ước số"]
-      MISSING --> END
+      subgraph L4["④ OUTPUT"]
+          REFUSE["Từ chối ngắn, nói rõ giới hạn,<br/>gợi ý việc làm được"]
+          ASK["Hỏi lại ĐÚNG 1 câu<br/>vd: 'Bạn muốn xem tháng 11 phải không?'"]
+          MISSING["Nói rõ chưa có dữ liệu,<br/>nêu khoảng đang có — không ước số"]
+          SHOW["• Top 3 nhóm chi (không tính 'không rõ') + số tiền + %<br/>• Bảng giao dịch làm căn cứ<br/>• Danh sách khoản 'không rõ' kèm nút chọn nhóm"]
+          FIX{"Người dùng sửa nhóm?"}
+          UPD["🔧 update_category(tx, nhóm người dùng chọn)<br/>ghi lại, hoàn tác được"]
+          DONE(["✅ Biết tiền đi đâu, có căn cứ, con số đúng"])
+      end
 
-      HAS -->|"Có"| CAT["🔧 categorize(tx)<br/>B1: luật chuẩn hoá tên nơi bán (code)<br/>B2: AI gán nhóm cho khoản còn lại"]
-      CAT --> SURE{"AI chắc chắn?"}
-      SURE -->|"Không (CK không nội dung, tên lạ)"| UNK["Gán nhóm 'không rõ'<br/>— không đoán"]
-      SURE -->|"Có"| GROUP["Gán nhóm chi"]
-      UNK --> SUM
-      GROUP --> SUM["🔧 sum_by_category / compare_months<br/>CODE cộng, tính %, xếp hạng"]
+      U --> APP --> GUARD
+      GUARD -->|"chạm từ khoá cấm"| REFUSE
+      GUARD -->|"qua"| AI1
+      AI1 -->|"AI xếp ngoài phạm vi"| REFUSE
+      AI1 --> CLEAR
+      CLEAR -->|"mơ hồ: 'dạo này', từ lóng"| ASK
+      ASK -.->|"người dùng trả lời"| U
+      CLEAR -->|"rõ"| T1 --> HAS
+      HAS -->|"không: tháng 12, tháng tương lai"| MISSING
+      HAS -->|"có"| T2
+      T2 -->|"luật đã nhận ra"| FILTER
+      T2 -->|"còn khoản chưa nhận ra"| FENCE --> AI2 --> SURE
+      SURE -->|"không: CK không nội dung, QR/POS không tên"| UNK --> FILTER
+      SURE -->|"có"| FILTER
+      FILTER --> T3 --> AI3 --> VERIFY
+      VERIFY -->|"lệch"| RETRY --> SHOW
+      VERIFY -->|"khớp 100%"| SHOW
+      SHOW --> FIX
+      FIX -->|"có — người bấm"| UPD -->|"code tính lại"| T3
+      FIX -->|"không / xong"| DONE
 
-      SUM --> WRITE["AI viết câu trả lời<br/>CHỈ chép số từ output công cụ"]
-      WRITE --> VERIFY{"Code kiểm: mọi con số trong<br/>câu trả lời khớp output công cụ?"}
-      VERIFY -->|"Lệch"| RETRY["Viết lại 1 lần;<br/>vẫn lệch → trả bảng số thuần từ code"]
-      RETRY --> SHOW
-      VERIFY -->|"Khớp 100%"| SHOW["Hiện cho người dùng:<br/>• Top 3 nhóm chi + số tiền + %<br/>• Bảng giao dịch làm căn cứ<br/>• Danh sách khoản 'không rõ'"]
-
-      SHOW --> FIX{"Người dùng sửa nhóm<br/>khoản 'không rõ'?"}
-      FIX -->|"Có — người bấm chọn"| UPD["🔧 update_category(tx, nhóm)<br/>ghi lại, đảo được"]
-      UPD --> SUM
-      FIX -->|"Không / đã xong"| END(["✅ Người dùng biết tiền đi đâu,<br/>có căn cứ, con số đúng"])
-
-      APP -.-> LOG[("tracing: log mọi lượt gọi<br/>model + công cụ → eval/, cost/")]
+      APP -.-> LOG[("tracing: log mọi lượt gọi model + công cụ<br/>→ eval/, cost/")]
   ```
 
-  **Đọc sơ đồ:** ô có 🔧 là công cụ trong `codebase/tools.py`. **AI chỉ quyết 4 việc**: phân loại câu hỏi có trong phạm vi không (sau khi quy tắc trong code đã chặn các từ khoá rõ ràng), hiểu câu hỏi và khoảng thời gian, gán nhóm (hoặc "không rõ") cho giao dịch mơ hồ, và viết lời giải thích. **Mọi phép tính do code làm**, có code kiểm lại trước khi hiện. **Đổi nhóm chi do người dùng bấm**, AI không tự đổi. Bốn nhánh dừng sớm (từ chối, hỏi lại, thiếu dữ liệu, số lệch) ứng với §5–§6.
+  **Đọc sơ đồ:** 🤖 là chỗ AI quyết, 🔧 là công cụ trong `codebase/tools.py` (code thuần). **AI chỉ quyết 3 việc**: (①) câu hỏi có trong phạm vi không và hỏi khoảng thời gian nào, (②) nhóm chi của khoản mà luật chưa nhận ra, (③) lời giải thích. **Mọi phép tính do code làm**, có code kiểm lại (R7) trước khi hiện. **Đổi nhóm chi do người dùng bấm**, AI không tự đổi. 7 chỗ chặn R1–R7 ứng với các kịch bản ở §5; ba nhánh dừng sớm (từ chối, hỏi lại, thiếu dữ liệu) ứng với §6.
 
 - **Hình dạng:** [x] workflow cố định · [ ] một agent · [ ] nhiều agent — các bước luôn giống nhau (hiểu câu hỏi → lấy giao dịch → phân nhóm → code cộng → viết → code kiểm); chỉ rẽ nhánh theo loại câu hỏi (tổng hợp / so 2 tháng / 1 nhóm chi), nên workflow có phân luồng là đủ, rẻ hơn và dễ đo hơn. **Không chọn một agent** vì để AI tự chọn bước tiếp sẽ mở đường cho AI bỏ qua bước code kiểm số hoặc tự tính — đúng cái bẫy lớn nhất của track; **không chọn nhiều agent** vì chỉ có một vai (người hỏi về chi tiêu của chính mình).
 - **AI dựa vào đâu** — mỗi công cụ (Duy viết trong `codebase/tools.py` **đúng tên này**, mỗi hàm có `@tool` + docstring; hiện file mới có hàm mẫu `search_example`):
 
   | Công cụ | Input | Output | Tác động ra ngoài? |
   |---|---|---|---|
-  | `get_transactions(user_id, from_date, to_date)` | mã người dùng, ngày bắt đầu, ngày kết thúc (YYYY-MM-DD) | danh sách giao dịch `{tx_id, date, description, amount, direction}`; rỗng nếu không có dữ liệu khoảng đó | Không — chỉ đọc |
-  | `categorize(transactions)` | danh sách giao dịch | mỗi giao dịch kèm `category` ∈ 6+ nhóm chi hoặc `"không rõ"`, và `method` ∈ `luat` / `ai` | Không — chỉ trả nhãn, không ghi |
-  | `sum_by_category(transactions)` | danh sách đã phân nhóm | tổng chi, tổng theo nhóm, % theo nhóm, xếp hạng, danh sách `tx_id` của từng nhóm | Không — code tính |
+  | `get_transactions(user_id, from_date, to_date)` | `user_id` lấy từ phiên (code gán, model không truyền được) · ngày bắt đầu, ngày kết thúc (YYYY-MM-DD) | giao dịch từ `data/transactions_bank.csv` + `data/transactions_card.csv`: `{tx_id, date, description, amount, direction, source}`; rỗng nếu không có dữ liệu khoảng đó | Không — chỉ đọc |
+  | `categorize(transactions)` | danh sách giao dịch | mỗi giao dịch kèm `category` ∈ 11 nhóm chi (gồm `khong_ro`) hoặc 3 nhóm không phải chi (`thu_nhap`, `hoan_tien`, `noi_bo`), và `method` ∈ `luat` / `ai` — lương, hoàn tiền, trả nợ thẻ luôn do **luật** nhận | Không — chỉ trả nhãn, không ghi |
+  | `sum_by_category(transactions)` | danh sách đã phân nhóm | tổng chi (**chỉ nhóm chi tiêu**, bỏ `thu_nhap` / `hoan_tien` / `noi_bo`), tổng theo nhóm, % theo nhóm, xếp hạng, danh sách `tx_id` của từng nhóm | Không — code tính |
   | `compare_months(user_id, month_1, month_2)` | mã người dùng, 2 tháng (YYYY-MM) | tổng theo nhóm của từng tháng + chênh lệch (số tiền, %) | Không — code tính |
   | `update_category(user_id, tx_id, category)` | giao dịch + nhóm **người dùng chọn** | nhãn mới đã lưu + nhãn cũ (để hoàn tác) | **Có** — ghi dữ liệu nhãn của người dùng; chỉ chạy khi người dùng bấm, đảo được |
 
 - **Mức tự động:** [ ] AI gợi ý, người quyết · [x] AI tự làm khi chắc, chuyển người khi không · [ ] AI tự làm — AI tự gán nhóm khi chắc, không chắc thì để "không rõ" cho người dùng tự chọn; con số không bao giờ do AI tự quyết. Lý do: gán nhầm nhóm thì rẻ — người dùng thấy ngay trong bảng căn cứ và bấm sửa; nhưng **số sai vài nghìn đồng mà trông như đúng** thì người dùng ra quyết định chi tiêu sai và mất lòng tin, sửa rất đắt → con số phải đến từ code và có code kiểm lại.
-- **Chỗ chặn rủi ro** (rủi ro lớn nhất của lát cắt bị chặn ở đâu, bằng gì):
-  - *Số sai / bịa số* → ô **VERIFY**: code trích mọi con số trong câu trả lời, so với output `sum_by_category` / `compare_months`; lệch thì viết lại 1 lần, vẫn lệch thì chỉ trả bảng số do code tạo.
-  - *Đoán nhóm cho khoản mơ hồ* → ô **SURE/UNK**: không chắc thì gán "không rõ", hiện riêng để người dùng chọn.
-  - *Bị đòi ngoài phạm vi / bị tấn công bằng lời nhắc* → ô **GUARD**: quy tắc trong code chặn trước (từ khoá đầu tư, chuyển tiền, OTP, người khác) rồi AI phân loại phần còn lại; mô tả giao dịch được đưa vào model như **dữ liệu**, không như lệnh.
-  - *Bịa số cho tháng không có dữ liệu* → ô **HAS/MISSING**: công cụ trả rỗng thì nói thiếu, không gọi bước viết.
+- **Chỗ chặn rủi ro** (rủi ro lớn nhất của lát cắt bị chặn ở đâu, bằng gì — mã R khớp sơ đồ):
+  - *Số sai / bịa số* (rủi ro lớn nhất) → **R7**: code trích mọi con số trong câu trả lời, so với output `sum_by_category` / `compare_months`; lệch thì viết lại 1 lần, vẫn lệch thì chỉ trả bảng số do code tạo.
+  - *Tổng chi phồng vì đếm 2 lần* → **R6**: lương, hoàn tiền, trả nợ thẻ của chính mình do luật nhận và loại khỏi tổng chi (kịch bản "nhóm sợ nhất" ở §5).
+  - *Đoán nhóm cho khoản mơ hồ* → **R5**: không chắc thì gán "không rõ", hiện riêng để người dùng chọn.
+  - *Bị đòi ngoài phạm vi* → **R1** (quy tắc code chặn từ khoá) rồi **AI ①** phân loại phần còn lại.
+  - *Lệnh chèn trong mô tả giao dịch* → **R4**: mô tả được đóng khung là dữ liệu khi đưa vào model, không phải lệnh; tổng chi vẫn do code tính nên lệnh chèn không đổi được số.
+  - *Lộ chi tiêu của người khác* → **Input**: `user_id` do code gán theo phiên, model không có tham số nào để đổi sang người khác.
+  - *Bịa số cho tháng không có dữ liệu* → **R3**: công cụ trả rỗng thì nói thiếu, không gọi bước viết.
 - **Chỗ người duyệt** (việc AI không được tự làm): đổi nhóm chi của giao dịch (chỉ qua `update_category` khi người dùng bấm) · mọi quyết định chi tiêu là của người dùng · AI không có công cụ nào chuyển tiền / giao dịch.
 - **Nguyên tắc thiết kế** (≥3, bắt buộc G10):
 
