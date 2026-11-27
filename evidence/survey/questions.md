@@ -9,12 +9,14 @@
 
 | Kênh đã gửi (vd: nhóm Zalo lớp L3B, Facebook cá nhân, nhóm đồng nghiệp) | Giờ gửi | Ghi chú |
 |---|---|---|
-| __ | __ | __ |
-| __ | __ | __ |
+| Nhóm Zalo | 27/11 14:50 | Hạ gửi |
+| Nhắn riêng bạn bè | 27/11 16:00 | Minh gửi |
+| Nhắn riêng bạn bè đã đi làm | 27/11 16:00 | Hường gửi |
 
-- **Giờ mở form:** __/11/2026 __:__
+- **Giờ mở form:** 27/11/2026, phiếu đầu tiên lúc 14:55
+- **Bản chụp đang dùng:** 27/11/2026 17:37 — 22 phiếu (form vẫn mở)
 - **Giờ chốt (ngừng nhận để đếm):** __/11/2026 __:__
-- **Tổng số câu trả lời lúc chốt:** __ · trong đó người trong nhóm (loại ra): __ · còn lại: __
+- **Tổng số câu trả lời lúc chốt:** __ · trong đó người trong nhóm (loại ra): 0 *(đã hỏi cả nhóm 27/11: không thành viên nào điền form)* · còn lại: __
 
 ## Bộ câu hỏi (chép nguyên văn từ form)
 
