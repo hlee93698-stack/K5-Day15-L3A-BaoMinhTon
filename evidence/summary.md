@@ -45,7 +45,7 @@
 | P2 | nhân viên văn phòng, đi làm 2 năm | trực tiếp · 27/11 21:00 | Một phần — biết sơ bộ, nhưng không coi là vấn đề thường xuyên | 1–2 | 10 phút | lịch sử giao dịch app ngân hàng (đã bỏ app quản lý chi tiêu) |
 | P3 | nhân viên văn phòng, đi làm ~4 năm | gọi video · 27/11 21:30 | Một phần — kiểm tra thường xuyên nhưng không ghép thành bức tranh cả tháng | ~3 | 15 phút | lịch sử app ngân hàng, đôi khi ví, tra Google / tin nhắn (đã thử thống kê trong app) |
 
-*Cách ghi: P1 là ghi chép đã viết lại bằng AI, không phải nguyên văn; P2 là người hỏi ghi lại sau buổi nói chuyện; P3 do người hỏi ghi nguyên văn. Chi tiết ở từng file.*
+*Cách ghi: P1 và P2 là người hỏi ghi lại sau buổi nói chuyện, không phải nguyên văn; P3 do người hỏi ghi nguyên văn. Chi tiết ở từng file.*
 
 ## 3. ≥5 trích dẫn nguyên văn (có nguồn, bỏ tên)
 
@@ -65,7 +65,7 @@
 9. "Mình không muốn biến việc chi tiêu hàng ngày thành một việc phải làm thêm." — P3
 10. "Mình chỉ muốn biết gần đây có tiêu gì nhiều quá không thôi, chứ bình thường cũng không nghĩ phải theo dõi chi tiết từng khoản." — P2 (theo ghi chép của người hỏi)
 
-*P1 không có trích nguyên văn (ghi chép đã viết lại) — ý chính: xem xong chỉ có cảm giác tiêu hơi quá, không có con số cụ thể.*
+*P1 không có trích nguyên văn (người hỏi ghi lại) — ý chính: xem xong chỉ có cảm giác tiêu hơi quá, không có con số cụ thể.*
 
 ## 4. Các nguồn có khớp nhau không
 
@@ -87,7 +87,7 @@ Giả thuyết ở `evidence/hypothesis.md`: **đúng một phần, phải đổ
 **Gợi ý cho thiết kế (từ phỏng vấn, chưa đo bằng khảo sát):** (1) không bắt nhập tay — đọc giao dịch có sẵn; (2) ngoài bảng theo nhóm, nên trả lời nhanh được câu *"tháng này khoản nào tăng so với bình thường / có gì tiêu quá tay"*; (3) thống kê có sẵn trong app bị chê vì phân loại không đúng ý → cho người dùng sửa nhóm là đúng hướng.
 
 Điều vẫn chưa biết: khoản không nhận ra chủ yếu là loại nào (phỏng vấn: khoản nhỏ vài chục nghìn, tên cửa hàng lạ — chưa có số); bao nhiêu người muốn "xem nhanh bất thường" so với "bảng chi tiết" (mới 2/3 phỏng vấn, khảo sát chưa hỏi).
-Giới hạn: mẫu từ người quen và học viên AI20K (rành công nghệ); 7/22 phiếu là sinh viên, không phải người dùng chính; câu 4–8 tự khai theo trí nhớ; phỏng vấn chỉ 3 người, P3 ngoài nhóm 1–3 năm đi làm, P1 chưa rõ số năm; ghi chép P1 đã viết lại bằng AI.
+Giới hạn: mẫu từ người quen và học viên AI20K (rành công nghệ); 7/22 phiếu là sinh viên, không phải người dùng chính; câu 4–8 tự khai theo trí nhớ; phỏng vấn chỉ 3 người, P3 ngoài nhóm 1–3 năm đi làm, P1 chưa rõ số năm; ghi chép P1, P2 là người hỏi ghi lại, không phải nguyên văn.
 
 ## Lịch hẹn phỏng vấn (dùng cho CP2 — chỉ ghi vai và giờ, không tên)
 
