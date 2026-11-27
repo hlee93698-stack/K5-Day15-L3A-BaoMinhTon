@@ -16,3 +16,11 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 | Slide, văn bản | | | | |
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).
+
+## Đánh giá CP3 ngày 27/11/2026
+
+Người phụ trách: Đinh Hường.
+
+Công cụ AI hỗ trợ rà code nhánh Hạ `ce9842c`, cấu hình kết nối model, tổng hợp lỗi và soạn bản chấm/báo cáo. Hường duyệt bản chấm trước khi áp dụng vào pass/ghi_chu. Kết quả chạy thật dùng `gpt-6-luna` qua 9router; token lấy từ usage API. Cấu hình unit test dùng fake để tránh gọi API thật.
+
+Lượt bổ sung `run-2@20261127-225323` đạt 21/29 (72,4%). Chỉ cập nhật pass/ghi_chu; không sửa output, expected, token hoặc trace. Không tạo thêm phỏng vấn, trích dẫn hay số liệu khảo sát. Minh chưa chấm độc lập 5 ca theo phân công.
