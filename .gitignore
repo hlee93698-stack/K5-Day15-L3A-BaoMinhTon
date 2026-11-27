@@ -35,3 +35,13 @@ evidence/**/raw-*
 # Nguyên file data BTC cấp (data/preclass, data/training-ops… của repo đề): để ở đây, không commit
 data-btc
 data-btc/
+
+# Token / cấu hình công cụ cục bộ — không commit
+.markdown-collab/
+# Nhãn người dùng sửa khi chạy thử
+runtime/
+# Ảnh / PDF sao kê — không bao giờ commit (luật track E)
+data/**/*.pdf
+data/**/*.jpg
+data/**/*.jpeg
+data/**/*.png
