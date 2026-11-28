@@ -22,7 +22,7 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): không —
 - Pain (KHÔNG chữ AI): nhân viên văn phòng đi làm dưới 3 năm — cuối tháng kéo lịch sử giao dịch xem tiền đã đi đâu — gặp nhiều khoản không nhận ra (chuyển khoản không nội dung, tên cửa hàng lạ, khoản lặt vặt) và phải tự cộng — xem xong vẫn chỉ biết một phần hoặc bỏ dở, tháng sau vẫn hụt tiền như cũ. *(Đã đổi so với CP1: bỏ "mất 20–30 phút" vì khảo sát không ủng hộ — chỉ 5/21 mất ≥15 phút.)*
 - Bằng chứng — số chính + kết luận (chi tiết: `evidence/summary.md`):
   - Khảo sát (Google Form, người ngoài nhóm): **N = 22** (21 người từng xem lại; người dùng chính n = 13) · **19/21 (90%)** có khoản không nhận ra — người dùng chính **13/13** · **15/21 (71%)** xem xong chỉ biết một phần hoặc bỏ dở · chỉ **5/21 (24%)** mất ≥ 15 phút · xem lại trung vị **2 lần / tháng** — bản chụp 27/11 17:37, form còn mở (→ Minh cập nhật khi đóng form)
-  - Phỏng vấn (≥3 người ngoài nhóm): __/3 người kể được 1 lần như vậy trong 1 tháng qua · mỗi lần mất __–__ phút (→ Minh)
+  - Phỏng vấn (≥3 người ngoài nhóm): **3/3** người kể được 1 lần như vậy trong 1 tháng qua · lần gần nhất mất **10–30 phút** (P1 20–30, P2 10, P3 15) · 3/3 không muốn nhập tay → `evidence/summary.md`
   - Review Google Play 1–2 sao: __/N (__%) nhắc tới thống kê / phân loại / lịch sử giao dịch — cách chọn mẫu: `evidence/data-mining.md` (→ Minh)
   - Kết luận *(tạm, theo `evidence/summary.md`)*: giả thuyết **đúng một phần, phải đổi trọng tâm** — đạt cả 2 ngưỡng đặt trước (76% và 90%, ngưỡng 50%), nhưng pain chính là **không nhận ra / không nhớ khoản**, không phải tốn thời gian. Phỏng vấn P1–P3 chưa làm (→ Minh, CP3).
 
@@ -46,7 +46,7 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): không —
 - Thống kê chi tiêu có sẵn trong ví điện tử (→ Hạ): đáng học __ · đáng né __ · mình khác gì __ — chưa kiểm
 - Thống kê / phân loại giao dịch trong app ngân hàng (→ Duy): đáng học __ · đáng né __ · mình khác gì __ — chưa kiểm
 - App ghi chép chi tiêu nhập tay (→ Hường): đáng học __ · đáng né __ · mình khác gì __ — chưa kiểm
-- Dán sao kê vào chatbot đa năng (→ Minh, dùng sao kê **giả** của nhóm): đáng học __ · đáng né __ (kiểm xem con số có khớp phép cộng thật không) · mình khác gì: số do code tính + code kiểm lại, khoản mơ hồ để "không rõ" — chưa kiểm
+- Dán sao kê vào chatbot đa năng (Minh đã thử ChatGPT 1 lần với sao kê **giả** tháng 11, `evidence/thu-chatgpt.md`): đáng học — tổng 28.845.500đ và top 3 khớp đáp án, không đếm đôi trả nợ thẻ, để riêng khoản không rõ, tự nói "dữ liệu mới đến 25/11" · đáng né — không cho thấy kiểm số thế nào, không có bảng giao dịch căn cứ, người dùng phải dán sao kê thật lên chatbot ngoài · mình khác gì: số do code tính + code kiểm lại, có giao dịch căn cứ, sửa được nhóm, không phải dán sao kê ra ngoài. Giới hạn: 1 lần thử, dữ liệu sạch dạng bảng
 
 ## §4. Thiết kế *(guide 2.2, 3.2)*
 - **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả): Một nhân viên văn phòng · cuối tháng hỏi "tháng này tiền đi đâu hết vậy?" · AI hiểu khoảng thời gian, chọn cách tổng hợp, và giữ khoản mơ hồ ở nhóm "không rõ" thay vì đoán · người dùng thấy 3 nhóm chi lớn nhất kèm số tiền, giao dịch làm căn cứ, và sửa được nhóm của khoản "không rõ".
