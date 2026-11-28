@@ -1,0 +1,15 @@
+{
+  "measurement_run": "simulate-1@20261128-123231",
+  "approved_rate_run": "run-3@20261128-122738",
+  "rate": 0.7931034482758621,
+  "sha256": {
+    "codebase/agent.py": "a76fa1b87344798a4150f4fa0b906caf07cf9ecf9f1c877ead98757afc6ff2ad",
+    "cost/personas.yaml": "795b390593f95782534d06b90a32571ccb8028439c70c5ae1f2f5539e73622ae",
+    "cost/simulate-1.csv": "674b162d28640c5a5c8e25d38078f690028ac8264b82aa5cfbbee2dcbbee2c9a",
+    "cost/simulate-1-summary.md": "40f6edc83eb4e569f0ecdff81aacd5870804a18e9ebe250486908fbb9401a885",
+    "traces/simulate-1.jsonl": "06c5f9db53514b1a18781ff1e6bb87d790aef4f2a8c9eb4631d79696d7b2d96d",
+    "eval/run-3.csv": "422ff669aa2efd3d79d491ce192359579a1c3744f9f1d58c1691d08f049faca1",
+    "traces/run-3.jsonl": "7a71417a557adcf2237da587fdee880a0773afb587efadc0967495f2ef755d81",
+    "evidence/survey/results.csv": "cdbff48da0a94c34a3befb79ff65dd3b08111e653bd969895885bc00b366dfb3"
+  }
+}

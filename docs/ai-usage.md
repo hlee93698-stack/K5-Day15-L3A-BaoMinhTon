@@ -17,10 +17,23 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).
 
+## Bằng chứng, chấm thử, thử ChatGPT — Hoàng Lam Minh (27–28/11/2026)
+
+Công cụ: Claude Code (VS Code). AI dựng khung file evidence và bộ câu hỏi phỏng vấn; viết `evidence/survey/count.py` và bỏ cột liên hệ khỏi bản xuất khảo sát; soạn bảng số và chọn trích dẫn trong `evidence/summary.md` từ `results.csv` thật; đối chiếu số tiền trong output với `data/summary_truth.csv` trước khi Minh chấm 5 câu; soạn sao kê giả cho lần thử ChatGPT (`evidence/thu-chatgpt.md`) và so kết quả với đáp án. Minh kiểm: chạy lại `count.py` ra đúng số trong `summary.md`; mọi quyết định Đạt / Không đạt ở `eval/cham-thu-minh.md` do Minh chấm. **Không dùng AI để** tạo người được phỏng vấn, câu trả lời khảo sát hay trích dẫn. Minh dùng thêm ChatGPT để viết gọn câu chữ ghi chép phỏng vấn; nội dung do người được phỏng vấn kể.
+
 ## Đánh giá CP3 ngày 27/11/2026
 
-Người phụ trách: Đinh Hường.
+Người phụ trách: Đinh Thị Hường.
 
 Công cụ AI hỗ trợ rà code nhánh Hạ `ce9842c`, cấu hình kết nối model, tổng hợp lỗi và soạn bản chấm/báo cáo. Hường duyệt bản chấm trước khi áp dụng vào pass/ghi_chu. Kết quả chạy thật dùng `gpt-6-luna` qua 9router; token lấy từ usage API. Cấu hình unit test dùng fake để tránh gọi API thật.
 
 Lượt bổ sung `run-2@20261127-225323` đạt 21/29 (72,4%). Chỉ cập nhật pass/ghi_chu; không sửa output, expected, token hoặc trace. Không tạo thêm phỏng vấn, trích dẫn hay số liệu khảo sát. Minh chưa chấm độc lập 5 ca theo phân công.
+
+
+## CP4 ngày 28/11/2026 — phần đánh giá và chi phí
+
+Người phụ trách: Đinh Thị Hường. Công cụ AI hỗ trợ đọc lỗi, bổ sung bảng căn cứ vào prompt viết giải thích, thêm test hồi quy, chạy eval và soạn nhận xét. Hường duyệt bản chấm run-3 đạt 23/29. Chỉ điền pass/ghi_chu, không thay output hay chuẩn chấm.
+
+Persona được tính từ 13 phiếu khảo sát nhóm người dùng chính; số lượt hỏi/phiên, quy mô và mức giá Luna chưa xác minh được ghi rõ là tự ước tính. Giá GPT-4o mini đối chiếu trang model chính thức. Token mô phỏng lấy từ usage API, không tự ước lượng. Chưa xác minh giá thanh toán thực của host 9router.
+
+Mô phỏng CP4 hoàn tất 50 phiên tổng hợp (88 lượt hỏi), không lỗi API, 59.170/8.627 token vào/ra. Bảng chi phí cuối tính lại từ CSV bằng cost/analyze.py với tỷ lệ run-3 23/29; giữ nguyên tóm tắt gốc. Không ghi đây là 50 người dùng thật hoặc hóa đơn 9router.

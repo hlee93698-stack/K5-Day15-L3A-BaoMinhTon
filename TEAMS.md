@@ -14,7 +14,7 @@
 | 1 | Lê Xuân Hạ | 2A202603571 | Đội trưởng | Canvas, spec, slide, nộp checkpoint (`canvas.md`, `spec.md`, `slides/`, `TEAMS.md`) |
 | 2 | Hoàng Lam Minh | 2A202603566 | Thành viên | Bằng chứng pain và người dùng thử: khảo sát, phỏng vấn (`evidence/`, `validation/`) |
 | 3 | Đỗ Đắc Duy | 2A202603604 | Thành viên | Dữ liệu giả có seed, công cụ tính, luồng agent (`data/`, `codebase/`, `docs/`) |
-| 4 | Đinh Hường | 2A202603569 | Thành viên | Bộ câu thử, chạy eval, mô phỏng chi phí (`eval/`, `cost/`) |
+| 4 | Đinh Thị Hường | 2A202603569 | Thành viên | Bộ câu thử, chạy eval, mô phỏng chi phí (`eval/`, `cost/`) |
 
 **Quy tắc điền**
 - **Lớp:** `L3A` hoặc `L3B`. **Track:** một chữ `A` (EdTech), `B` (Y tế), `C` (Du lịch), `D` (Thương mại điện tử), `E` (Tài chính) hoặc `F` (Làn khác). **Link repo:** link GitHub công khai của nhóm.
