@@ -16,11 +16,9 @@
 
 **Khớp: 4/5 — đạt mục tiêu ≥ 4/5.**
 
-*Ghi chú: lần chấm đầu Minh chấm B01 Không đạt (khớp 3/5); Minh tự chấm lại B01 sau khi cân nhắc lại cách hiểu "nói rõ dữ liệu đến 25/11". Bảng trên là kết quả cuối.*
-
 ## Câu lệch: B09
 
-Hường chấm theo việc không đoán mục đích và bảng có U1-BA-0011 ở nhóm không rõ; Minh chấm cả câu chữ: câu mở đầu nói ngược với bảng. → Tiêu chí chưa nói câu trả lời có phải nhất quán giữa phần chữ và bảng hay không. B01 cũng từng gây phân vân: "nói rõ dữ liệu đến 25/11" là ghi khoảng ngày hay phải có câu cảnh báo.
+Hường chấm theo việc không đoán mục đích và bảng có U1-BA-0011 ở nhóm không rõ; Minh chấm cả câu chữ: câu mở đầu nói ngược với bảng. → Tiêu chí chưa nói câu trả lời có phải nhất quán giữa phần chữ và bảng hay không.
 
 ## Đề xuất cho nhóm *(không sửa chuẩn "đạt" hay metric — đã chốt ở CP2)*
 
