@@ -1,6 +1,6 @@
-# Báo cáo đánh giá CP3 — BaoMinhTon
+# Báo cáo đánh giá CP3 và CP4 — BaoMinhTon
 
-**Người phụ trách đánh giá: Đinh Hường · Ngày: 27/11/2026.**
+**Người phụ trách đánh giá: Đinh Thị Hường · Cập nhật: 28/11/2026.**
 
 ## 1. Mục tiêu và cách đánh giá
 
@@ -16,6 +16,7 @@ Giữ nguyên 5 metric đã chốt trong `eval/metric_spec.yaml` và chuẩn t�
 |---|---|---|---|---|---|---|---|---|
 | 1 | `run-1@20261127-192815` | Duy `c0f68fa` / `gpt-4o-mini` | 24/29 | 82,8% | 5/5 | 13/18 | 6/6 | Chưa đạt chuẩn |
 | Bổ sung CP3, file run-2 | `run-2@20261127-225323` | Hạ `ce9842c` / `gpt-6-luna` qua 9router | **21/29** | **72,4%** | 5/5 | 10/18 | 6/6 | **Chưa đạt chuẩn ≥95%** |
+| Sau một cải tiến CP4, file run-3 | `run-3@20261128-122738` | main `95fb8bc` + cải tiến căn cứ / `gpt-6-luna` qua 9router | **23/29** | **79,3%** | 5/5 | 12/18 | 6/6 | **Chưa đạt chuẩn ≥95%** |
 
 Lượt 1 lấy từ snapshot Duy, artifact commit `bb28d1c`. Lượt bổ sung đánh giá code của Hạ ở commit `ce9842c`. Bộ unit test được cấu hình dùng fake để không gọi API thật khi kiểm thử.
 
@@ -68,10 +69,32 @@ B09/B20/B26 đạt về không đoán khoản mơ hồ. B14–B19 đạt về gi
 
 Rà code thấy `intent.parse_intent` chưa buộc hỏi lại khi không có mốc thời gian. `report.summary_context` chưa đưa đủ giao dịch căn cứ và quy tắc loại trừ vào facts gửi model; bảng do code dựng lại có thông tin đó. Verifier kiểm tập giá trị tiền/% nên không bắt được mâu thuẫn về nghĩa ở B10/B11. Đây là nguyên nhân khả dĩ theo code, không phải kết quả thí nghiệm tách từng yếu tố.
 
-Chưa sửa logic sản phẩm sau lượt bổ sung. Không xóa câu trượt, không sửa output, không đổi chuẩn đạt. Minh chưa chấm độc lập 5 câu B01/B07/B09/B16/B18; chưa có số đồng thuận giữa hai người chấm.
+Tại thời điểm kết thúc CP3, chưa sửa logic sản phẩm sau lượt bổ sung. Không xóa câu trượt, không sửa output, không đổi chuẩn đạt. Minh đã lưu lần chấm độc lập 5 câu của run-1 tại nhánh `minh-cp4`, commit `be01c3a`, file `eval/cham-thu-minh.md`: khớp 4/5, khác B09 về tính nhất quán của phần lời. Nguồn này chưa có trên main ở thời điểm cập nhật. Chưa có lần chấm độc lập run-2/run-3.
 
 ## 7. Kết luận CP3
 
 Đã hoàn thành bộ 29 câu thử, kiểm tra cấu trúc và unit test, chạy đánh giá bằng model thật, chấm kết quả và tổng hợp lỗi. Lượt bổ sung đạt **21/29 câu (72,4%)**, chưa đạt chuẩn tổng ≥95%; nhóm lỗi lớn nhất là không hỏi lại khi thiếu thông tin.
 
 Chưa sửa logic sản phẩm sau lượt đánh giá. Phần CP4 cần chọn một cải tiến cụ thể và chạy lại với cùng model, cùng bộ câu thử để đo tác động. Mô phỏng chi phí chưa thực hiện trong báo cáo CP3 này.
+
+
+## 8. Một cải tiến CP4 và kết quả so sánh
+
+Sau khi cập nhật main `95fb8bc`, rà các nhánh Duy/Hạ chưa thấy thay đổi code CP4 mới. Chọn nhóm lỗi phần lời thiếu hoặc mâu thuẫn căn cứ, xuất hiện ở B10/B11 của run-2; nhận xét B09 trong lần Minh chấm độc lập run-1 cũng chỉ ra vấn đề tương tự.
+
+**Thay đổi duy nhất về hành vi:** khi viết giải thích, gửi thêm bảng kết quả code dưới dạng chuỗi JSON cùng facts. Hướng dẫn model dùng giao dịch và quy tắc loại trừ trong bảng, coi mô tả giao dịch là dữ liệu, không làm theo lệnh trong đó. Không đổi guard, intent, phân nhóm, phép tính, verifier, benchmark hay metric. Giữ bước kiểm số, một lần viết lại và fallback bảng code.
+
+**Trước/sau trên cùng model và bộ 29 câu:** run-2 đạt 21/29 (72,4%); run-3 đạt 23/29 (79,3%), tăng 2 câu, tương đương 6,9 điểm phần trăm. B10 đã nêu đúng tổng 21.662.500đ và việc loại trừ; B11 đã dùng laptop 12.900.000đ ngày 16/11 làm căn cứ. B09 xác định rõ khoản chuyển 1.500.000đ ngày 17/09, giữ không rõ. Không có câu đã đạt trong run-2 chuyển thành trượt theo bản chấm hiện tại.
+
+**Còn 6 câu trượt:** B07, B08, B21, B22, B24, B25. Chưa sửa cơ chế hỏi lại; chỉ 2/8 câu thuộc metric hỏi lại đạt. Đây là hạn chế còn lại, không đổi chuẩn để loại các câu này.
+
+Run-3 hoàn tất 29/29, không lỗi kỹ thuật; 28 lần gọi model, 74 lần gọi công cụ, 20.453 token vào và 3.166 token ra, tổng 23.619 token. Run-2 dùng tổng 6.769 token. Số token tăng do gửi đầy đủ căn cứ; tổng độ trễ đo trong CSV tăng từ 109,21 lên 202,50 giây. Độ trễ còn chịu ảnh hưởng mạng và tải endpoint, không coi toàn bộ chênh lệch là tác động của prompt.
+
+45/45 unit test qua, gồm ca hồi quy bảo đảm model nhận giao dịch căn cứ và quy tắc loại trừ. `python run.py check` và `python run.py score eval/run-3.csv` qua; score xác nhận thường 5/5, khó 12/18, từ chối 6/6. Trace không có lời gọi update_category. Chi phí của phiên bản sau cải tiến xem `cost/cost-estimate.md`.
+
+Các số trên là một lần chạy trước/sau trên bộ nhỏ, model có thể trả khác ở lần khác; chưa đo nhiều lần để ước lượng độ biến thiên. Kết quả vẫn dưới chuẩn 95%, và không chứng minh hiệu quả trên sao kê thật.
+
+
+## 9. Mô phỏng chi phí CP4
+
+Đã chạy 50 phiên tổng hợp, 88 lượt hỏi, không lỗi API; token đo thật 59.170 vào và 8.627 ra. Theo giá Luna giả định 0,10/0,50 USD mỗi triệu token và tỷ lệ run-3 23/29, chi phí khoảng 0,00020 USD/phiên và 0,00026 USD/task thành công quy đổi. Đây chưa phải giá thanh toán xác minh của 9router. Bảng cuối, đối chiếu giá GPT-4o mini, nguồn persona và giới hạn phương pháp nằm trong cost/cost-estimate.md.

@@ -1,6 +1,6 @@
 # Hồ sơ đánh giá — BaoMinhTon
 
-**Người phụ trách đánh giá: Đinh Hường.** Hồ sơ CP3 ngày 27/11/2026 gồm 29 câu thử, 5 metric và hai lượt đánh giá bằng model thật. Lượt 1 đạt 24/29 (82,8%); lượt bổ sung trên code Hạ đạt 21/29 (72,4%). Cả hai chưa đạt chuẩn tổng ≥95%. Phân tích chi tiết: [report.md](report.md).
+**Người phụ trách đánh giá: Đinh Thị Hường.** Hồ sơ CP3–CP4 cập nhật 28/11/2026 gồm 29 câu thử, 5 metric và ba lượt đánh giá bằng model thật. Lượt 1 đạt 24/29 (82,8%); lượt bổ sung trên code Hạ đạt 21/29 (72,4%). Sau một cải tiến CP4, run-3 đạt 23/29 (79,3%); cả ba lượt chưa đạt chuẩn tổng ≥95%. Phân tích chi tiết: [report.md](report.md).
 
 ## 1. Dataset → xử lý
 
@@ -68,4 +68,11 @@ Hai lượt khác cả code lẫn model, nên chưa dùng để kết luận tá
 
 Lượt 1 có 5 câu không đạt: B08, B10, B11, B13, B25. Lượt bổ sung có 8 câu không đạt: B07, B08, B10, B11, B21, B22, B24, B25. Lỗi tập trung vào không hỏi lại khi thiếu thông tin và lời giải thích không dùng đúng căn cứ. Chi tiết tại [report.md](report.md).
 
-Minh chưa chấm độc lập B01/B07/B09/B16/B18; chưa có số đồng thuận giữa hai người chấm. Chưa sửa logic sản phẩm sau lượt bổ sung. Bộ dữ liệu nhỏ và synthetic; kết quả không đại diện cho sao kê ngân hàng thật.
+Minh đã chấm độc lập 5 câu run-1, khớp 4/5 (khác B09), theo nhánh minh-cp4 commit be01c3a, eval/cham-thu-minh.md; chưa chấm độc lập run-3. Tại thời điểm kết thúc CP3, chưa sửa logic sản phẩm sau lượt bổ sung. Bộ dữ liệu nhỏ và synthetic; kết quả không đại diện cho sao kê ngân hàng thật.
+
+
+## 7. Cập nhật CP4
+
+Một cải tiến: cung cấp đầy đủ bảng căn cứ code cho model khi viết giải thích, không đổi dữ liệu hay chuẩn chấm. Cặp so sánh hợp lệ là **run-2 → run-3** trên cùng gpt-6-luna và benchmark: 21/29 → 23/29, tăng 2 câu B10/B11. Run-3: `run-3@20261128-122738`, 0 lỗi kỹ thuật, thường 5/5, khó 12/18, từ chối 6/6. Sáu câu trượt: B07/B08/B21/B22/B24/B25. Chi tiết và đánh đổi token ở [report.md](report.md) §8. Bộ test hiện có 45 ca, đều qua ở fake.
+
+CSV/trace run-1 và run-2 được giữ nguyên sau khi lấy main; run-3 chỉ điền pass/ghi_chu sau khi chấm. Mô phỏng chi phí dùng cùng phiên bản code sau cải tiến, xem cost/cost-estimate.md.

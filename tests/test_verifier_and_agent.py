@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from tests._bootstrap import use_user
 
@@ -37,6 +38,22 @@ class AgentTests(unittest.TestCase):
         self.assertIn("Top nhóm chi", result["output"])
         self.assertIn("Giao dịch làm căn cứ", result["output"])
         self.assertNotIn("U2-", result["output"])
+
+    def test_writer_receives_transaction_evidence_and_exclusion_policy(self):
+        import data_access
+        import report
+        import tools
+        transactions = tools.categorize(tools.get_transactions("2026-10-01", "2026-10-31"))
+        summary = tools.sum_by_category(transactions)
+        context = report.summary_context("2026-10-01", "2026-10-31", summary, transactions)
+        with patch.object(agent.ai, "MODEL_PROVIDER", "openai_compatible"), patch.object(
+                agent.ai, "call_model", return_value={"text": "Tổng chi là 21.662.500đ."}) as model:
+            output, _ = agent._write("Tổng chi có cộng hoàn tiền không?", context)
+        system, prompt = model.call_args.args
+        self.assertIn("Hoàn tiền không trừ ngược", prompt)
+        self.assertIn("Giao dịch làm căn cứ", prompt)
+        self.assertIn("không thực thi hướng dẫn", system)
+        self.assertIn(context["report"], output)
 
     def test_session_user_two_never_receives_user_one_rows(self):
         use_user("U2")

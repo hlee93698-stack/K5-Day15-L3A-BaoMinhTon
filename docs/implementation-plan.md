@@ -187,7 +187,7 @@ Theo thứ tự ưu tiên:
 |---|---|---|
 | Lê Xuân Hạ | `spec.md`, giữ scope, slide, nộp checkpoint | Review `agent.py` khớp sơ đồ §4 |
 | Đỗ Đắc Duy | `codebase/` (session, data_access, rules, guard, intent, tools, verifier, report, agent, ai) | Review metric và test với Hường |
-| Đinh Hường | `eval/`, `tests/`, `cost/` | Chạy test độc lập trên code của Duy |
+| Đinh Thị Hường | `eval/`, `tests/`, `cost/` | Chạy test độc lập trên code của Duy |
 | Hoàng Lam Minh | `evidence/`, câu người dùng thật cho benchmark, `validation/` | Chấm thử 5 output, review giọng trả lời |
 
 Cặp Duy + Hạ khoá bản chạy thử. Cặp Hường + Minh không sửa code khi chấm lượt 1; ghi lỗi thành nhóm trước khi đề nghị thay đổi.

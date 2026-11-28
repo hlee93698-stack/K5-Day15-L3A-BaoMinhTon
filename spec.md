@@ -241,7 +241,7 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): không —
   - **Lê Xuân Hạ** (đội trưởng): `canvas.md`, `spec.md` (người duy nhất sửa file này), `slides/` → `demo-slides.pdf`, nộp checkpoint.
   - **Hoàng Lam Minh**: bằng chứng pain — khảo sát, phỏng vấn, đào review (`evidence/`), người dùng thử (`validation/`).
   - **Đỗ Đắc Duy**: dữ liệu giả có seed + `data/DATA_CARD.md`, công cụ + luồng (`codebase/`), `docs/`.
-  - **Đinh Hường**: bộ câu thử + metric + chạy eval (`eval/`), mô phỏng chi phí (`cost/`).
+  - **Đinh Thị Hường**: bộ câu thử + metric + chạy eval (`eval/`), mô phỏng chi phí (`cost/`).
   - Chia cặp: cặp X (bản chạy thử) Duy + Hạ · cặp Y (đánh giá) Hường + Minh.
 - Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`): dùng Claude Code dựng khung `spec.md` (sơ đồ flow, kịch bản §5, nháp metric) từ canvas và file track; nhóm đọc lại và quyết định. Không dùng AI để sinh bằng chứng, trích dẫn hay số liệu. __ (→ Duy bổ sung)
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
