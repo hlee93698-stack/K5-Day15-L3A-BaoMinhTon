@@ -17,6 +17,10 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).
 
+## Bằng chứng, chấm thử, thử ChatGPT — Hoàng Lam Minh (27–28/11/2026)
+
+Công cụ: Claude Code (VS Code). AI dựng khung file evidence và bộ câu hỏi phỏng vấn; viết `evidence/survey/count.py` và bỏ cột liên hệ khỏi bản xuất khảo sát; soạn bảng số và chọn trích dẫn trong `evidence/summary.md` từ `results.csv` thật; đối chiếu số tiền trong output với `data/summary_truth.csv` trước khi Minh chấm 5 câu; soạn sao kê giả cho lần thử ChatGPT (`evidence/thu-chatgpt.md`) và so kết quả với đáp án. Minh kiểm: chạy lại `count.py` ra đúng số trong `summary.md`; mọi quyết định Đạt / Không đạt ở `eval/cham-thu-minh.md` do Minh chấm. **Không dùng AI để** tạo người được phỏng vấn, câu trả lời khảo sát hay trích dẫn. Minh dùng thêm ChatGPT để viết gọn câu chữ ghi chép phỏng vấn; nội dung do người được phỏng vấn kể.
+
 ## Đánh giá CP3 ngày 27/11/2026
 
 Người phụ trách: Đinh Hường.
