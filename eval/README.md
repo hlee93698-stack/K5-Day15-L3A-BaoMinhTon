@@ -34,7 +34,7 @@ Hường phụ trách kết quả chấm theo 5 metric đã chốt trong spec §
 
 Mỗi câu pass=1 khi đáp ứng toàn bộ pass_criterion, mọi metric áp dụng và không có lỗi kỹ thuật. Một điều kiện sai thì pass=0; ghi lý do cụ thể và tx_id nếu có trong ghi_chu. Metric không áp dụng ghi N/A trong ghi chú, không coi là một lần đạt. Tỉ lệ từng metric = số câu đạt / số câu áp dụng. Không dùng riêng trace làm đáp án vì công cụ cũng có thể cộng sai; phải so với đáp án độc lập. Output có số đúng nhưng sai nhóm/kỳ/người vẫn trượt.
 
-**Người thứ hai chấm thử:** Minh chấm độc lập B01, B07, B09, B16, B18 trên `run-1.csv` ngày 28/11/2026, trước khi xem cột `pass` của Hường → **khớp 3/5** (lệch B01, B09: Minh chấm Không đạt, Hường chấm Đạt; cả hai lệch do cách hiểu tiêu chí, số tiền đều đúng). Chi tiết và đề xuất: [cham-thu-minh.md](cham-thu-minh.md). Mục tiêu ≥4/5; nếu cần làm rõ định nghĩa phải hoàn tất trước khi đóng băng metric. Không sửa chuẩn sau CP2.
+**Người thứ hai chấm thử:** Minh chấm độc lập B01, B07, B09, B16, B18 trên `run-1.csv` ngày 28/11/2026, trước khi xem cột `pass` của Hường → **khớp 3/5 khi chấm độc lập** (lệch B01, B09 do cách hiểu tiêu chí, số tiền đều đúng). Sau khi đối chiếu, thống nhất B01 (ghi khoảng ngày là đủ) → khớp 4/5; **B09 vẫn lệch**. Chi tiết và đề xuất: [cham-thu-minh.md](cham-thu-minh.md). Mục tiêu ≥4/5; nếu cần làm rõ định nghĩa phải hoàn tất trước khi đóng băng metric. Không sửa chuẩn sau CP2.
 
 **Ngưỡng tổng nhóm đã chốt:** ≥95%; với 29 câu hiện tại cần ít nhất **28/29 câu đạt**. Ngưỡng và 5 metric đã ghi ở `spec.md` §7; hai lượt hiện đạt 24/29 và 21/29, đều chưa đạt chuẩn. Chưa thay đổi ngưỡng sau CP2.
 
